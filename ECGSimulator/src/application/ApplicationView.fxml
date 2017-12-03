@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.ApplicationController">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
+   <top>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="browse" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" />
+            <TextField fx:id="filepath" promptText="*.ekg filepath" BorderPane.alignment="CENTER" />
+            <Button fx:id="visualize" mnemonicParsing="false" onAction="#visualizePressed" text="Visualize" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+         </children>
+      </GridPane>
+   </top>
    <center>
-      <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+      <LineChart fx:id="chart" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" title="ECG Signal characteristics" verticalGridLinesVisible="false" verticalZeroLineVisible="false" BorderPane.alignment="CENTER">
+        <xAxis>
+          <CategoryAxis gapStartAndEnd="false" label="time [s]" side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yAxis" forceZeroInRange="false" minorTickVisible="false" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
+        </yAxis>
+         <effect>
+            <Glow />
+         </effect>
+      </LineChart>
    </center>
 </BorderPane>

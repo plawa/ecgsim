@@ -9,34 +9,69 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
-   <top>
-      <GridPane>
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
          <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <Button fx:id="browse" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" />
-            <TextField fx:id="filepath" promptText="*.ekg filepath" BorderPane.alignment="CENTER" />
-            <Button fx:id="visualize" mnemonicParsing="false" onAction="#visualizePressed" text="Visualize" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+            <TitledPane text="Read signal">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints halignment="RIGHT" minWidth="110.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button fx:id="browse" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
+                        <TextField fx:id="filepath" onAction="#loadFile" promptText="type *.ekg filepath and press 'enter' or browse for file..." />
+                        <ComboBox id="leadCombobox" fx:id="leadCombobox" minWidth="100.0" onAction="#visualize" promptText="select lead" GridPane.columnIndex="2" />
+                     </children>
+                  </GridPane>
+               </content>
+            </TitledPane>
+            <TitledPane expanded="false" text="Generate signal" GridPane.rowIndex="1">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ComboBox fx:id="diseaseCombobox" prefHeight="25.0" prefWidth="277.0" promptText="select disease" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" />
+                        <Button fx:id="generate" mnemonicParsing="false" prefWidth="80.0" text="Generate" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                     </children>
+                  </GridPane>
+               </content>
+            </TitledPane>
+            <LineChart fx:id="chart" createSymbols="false" horizontalGridLinesVisible="false" legendVisible="false" title="ECG Signal characteristics" verticalGridLinesVisible="false" verticalZeroLineVisible="false" GridPane.rowIndex="2">
+              <xAxis>
+                <NumberAxis label="time [s]" side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" fx:id="xAxis" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis fx:id="yAxis" forceZeroInRange="false" minorTickVisible="false" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
+              </yAxis>
+               <effect>
+                  <DisplacementMap>
+                     <mapData>
+                        <FloatMap />
+                     </mapData>
+                  </DisplacementMap>
+               </effect>
+            </LineChart>
          </children>
       </GridPane>
-   </top>
-   <center>
-      <LineChart fx:id="chart" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" title="ECG Signal characteristics" verticalGridLinesVisible="false" verticalZeroLineVisible="false" BorderPane.alignment="CENTER">
-        <xAxis>
-          <CategoryAxis gapStartAndEnd="false" label="time [s]" side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" fx:id="xAxis" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="yAxis" forceZeroInRange="false" minorTickVisible="false" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
-        </yAxis>
-         <effect>
-            <Glow />
-         </effect>
-      </LineChart>
    </center>
 </BorderPane>

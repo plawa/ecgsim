@@ -11,7 +11,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("ECG Simulator");
-			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("ApplicationView.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ApplicationView.fxml"));
+			BorderPane root = (BorderPane) loader.load();
+			((ApplicationController) loader.getController()).setStage(primaryStage);
 			Scene scene = new Scene(root, 1200, 600);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);

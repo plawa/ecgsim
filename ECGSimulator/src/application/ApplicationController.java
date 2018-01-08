@@ -20,8 +20,11 @@ import javafx.stage.Stage;
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
 import parser.mapper.EcgMarshaller;
+import resources.RythmType;
 
 public class ApplicationController {
+
+	private static final String SPACE = " ";
 
 	private static final int SAMPLING_STEP = 5;
 
@@ -29,13 +32,10 @@ public class ApplicationController {
 	private TextField filepath;
 
 	@FXML
-	private Button browse;
+	private Button browse, generate;
 
 	@FXML
-	private Button generate;
-
-	@FXML
-	private ComboBox<Disease> diseaseCombobox;
+	private ComboBox<RythmType> diseaseCombobox;
 
 	@FXML
 	private ComboBox<String> leadCombobox;
@@ -44,10 +44,7 @@ public class ApplicationController {
 	private LineChart<Integer, Integer> chart;
 
 	@FXML
-	private NumberAxis xAxis;
-
-	@FXML
-	private NumberAxis yAxis;
+	private NumberAxis xAxis, yAxis;
 
 	private final FileChooser fileChooser = new FileChooser();
 
@@ -57,8 +54,9 @@ public class ApplicationController {
 
 	@FXML
 	private void initialize() {
-		diseaseCombobox.getItems().setAll(Disease.values());
+		diseaseCombobox.getItems().setAll(RythmType.values());
 		JFXChartUtil.setupZooming(chart);
+		JFXChartUtil.addDoublePrimaryClickAutoRangeHandler(chart);
 	}
 
 	@FXML
@@ -73,9 +71,7 @@ public class ApplicationController {
 	@FXML
 	private void loadFile() throws JAXBException {
 		currentEcgSignal = EcgMarshaller.unmarshall(filepath.getText());
-		List<String> leadNames = currentEcgSignal.getLead().stream().map(Lead::getName).collect(Collectors.toList());
-		leadCombobox.getItems().clear();
-		leadCombobox.getItems().setAll(leadNames);
+		populateLeadCombobox();
 	}
 
 	@FXML
@@ -84,25 +80,33 @@ public class ApplicationController {
 		resetChartZoom();
 	}
 
+	@FXML
+	private void generate() {
+		// TODO Auto-generated method stub
+
+	}
+
 	private void loadChart(Ecg signal) {
 		String part = signal.getLead().stream().filter(l -> l.getName().equals(leadCombobox.getValue()))
 				.map(Lead::getPart).findAny().get();
 		XYChart.Series<Integer, Integer> series = new XYChart.Series<>();
-		String[] split = part.split(" ");
-		for (int i = 0; i < split.length; i += SAMPLING_STEP) {
-			series.getData().add(new XYChart.Data<Integer, Integer>(Integer.valueOf(i), Integer.parseInt(split[i])));
+		String[] points = part.split(SPACE);
+		for (int i = 0; i < points.length; i += SAMPLING_STEP) {
+			series.getData().add(new XYChart.Data<Integer, Integer>(Integer.valueOf(i), Integer.parseInt(points[i])));
 		}
 		chart.getData().clear();
 		chart.getData().addAll(series);
 	}
 
+	private void populateLeadCombobox() {
+		List<String> leadNames = currentEcgSignal.getLead().stream().map(Lead::getName).collect(Collectors.toList());
+		leadCombobox.getItems().clear();
+		leadCombobox.getItems().setAll(leadNames);
+	}
+
 	private void resetChartZoom() {
 		chart.getXAxis().setAutoRanging(true);
 		chart.getYAxis().setAutoRanging(true);
-	}
-
-	public Stage getStage() {
-		return primaryStage;
 	}
 
 	public void setStage(Stage stage) {

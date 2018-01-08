@@ -33,8 +33,8 @@
                     </rowConstraints>
                      <children>
                         <Button fx:id="browse" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
-                        <TextField fx:id="filepath" onAction="#loadFile" promptText="type *.ekg filepath and press 'enter' or browse for file..." />
-                        <ComboBox id="leadCombobox" fx:id="leadCombobox" minWidth="100.0" onAction="#visualize" promptText="select lead" GridPane.columnIndex="2" />
+                        <TextField fx:id="filepath" onAction="#loadFile" promptText="Type *.ekg filepath and press 'enter' or browse for file..." />
+                        <ComboBox id="leadCombobox" fx:id="leadCombobox" minWidth="100.0" onAction="#visualize" promptText="Select lead" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>
                </content>
@@ -51,17 +51,17 @@
                     </rowConstraints>
                      <children>
                         <ComboBox fx:id="diseaseCombobox" prefHeight="25.0" prefWidth="277.0" promptText="select disease" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" />
-                        <Button fx:id="generate" mnemonicParsing="false" prefWidth="80.0" text="Generate" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                        <Button fx:id="generate" mnemonicParsing="false" onAction="#generate" prefWidth="80.0" text="Generate" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
                      </children>
                   </GridPane>
                </content>
             </TitledPane>
-            <LineChart fx:id="chart" createSymbols="false" horizontalGridLinesVisible="false" legendVisible="false" title="ECG Signal characteristics" verticalGridLinesVisible="false" verticalZeroLineVisible="false" GridPane.rowIndex="2">
+            <LineChart fx:id="chart" createSymbols="false" legendVisible="false" title="ECG Signal characteristics" verticalZeroLineVisible="false" GridPane.rowIndex="2">
               <xAxis>
-                <NumberAxis label="time [s]" side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" fx:id="xAxis" />
+                <NumberAxis label="time [ms]" side="BOTTOM" tickMarkVisible="false" fx:id="xAxis" />
               </xAxis>
               <yAxis>
-                <NumberAxis fx:id="yAxis" forceZeroInRange="false" minorTickVisible="false" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
+                <NumberAxis fx:id="yAxis" forceZeroInRange="false" minorTickVisible="false" side="LEFT" tickMarkVisible="false" />
               </yAxis>
                <effect>
                   <DisplacementMap>

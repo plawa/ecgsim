@@ -1,0 +1,7 @@
+package resources;
+
+public enum RythmType {
+
+	SINUS_RYTHM, TACHYCARDIA_SUPRAVENTRICULARIS, BRADYCARDIA, ATRIAL_FIBRILATION
+
+}

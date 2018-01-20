@@ -5,7 +5,6 @@
 //         Generated on: 2017.11.04 at 04:58:13 PM CET 
 //
 
-
 package parser.generated.jaxb;
 
 import java.util.ArrayList;
@@ -18,11 +17,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
-/** 
- * <p>Java class for anonymous complex type.
+/**
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected         content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType&gt;
@@ -52,175 +53,161 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "lead"
-})
+@XmlType(name = "", propOrder = { "lead" })
 @XmlRootElement(name = "ecg")
 public class Ecg {
 
-    protected List<Ecg.Lead> lead;
-    @XmlAttribute(name = "rate")
-    protected Short rate;
-    @XmlAttribute(name = "length")
-    protected Short length;
+	protected List<Ecg.Lead> lead;
+	@XmlAttribute(name = "rate")
+	protected Short rate;
+	@XmlAttribute(name = "length")
+	protected Short length;
 
-    /**
-     * Gets the value of the lead property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the lead property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getLead().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Ecg.Lead }
-     * 
-     * 
-     */
-    public List<Ecg.Lead> getLead() {
-        if (lead == null) {
-            lead = new ArrayList<Ecg.Lead>();
-        }
-        return this.lead;
-    }
+	/**
+	 * Gets the value of the lead property.
+	 * 
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot.
+	 * Therefore any modification you make to the returned list will be present
+	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
+	 * for the lead property.
+	 * 
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getLead().add(newItem);
+	 * </pre>
+	 * 
+	 * 
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link Ecg.Lead }
+	 * 
+	 * 
+	 */
+	public List<Ecg.Lead> getLead() {
+		if (lead == null) {
+			lead = new ArrayList<Ecg.Lead>();
+		}
+		return this.lead;
+	}
 
-    /**
-     * Gets the value of the rate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getRate() {
-        return rate;
-    }
+	/**
+	 * Gets the value of the rate property.
+	 * 
+	 * @return possible object is {@link Short }
+	 * 
+	 */
+	public Short getRate() {
+		return rate;
+	}
 
-    /**
-     * Sets the value of the rate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setRate(Short value) {
-        this.rate = value;
-    }
+	/**
+	 * Sets the value of the rate property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Short }
+	 * 
+	 */
+	public void setRate(Short value) {
+		this.rate = value;
+	}
 
-    /**
-     * Gets the value of the length property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getLength() {
-        return length;
-    }
+	/**
+	 * Gets the value of the length property.
+	 * 
+	 * @return possible object is {@link Short }
+	 * 
+	 */
+	public Short getLength() {
+		return length;
+	}
 
-    /**
-     * Sets the value of the length property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setLength(Short value) {
-        this.length = value;
-    }
+	/**
+	 * Sets the value of the length property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Short }
+	 * 
+	 */
+	public void setLength(Short value) {
+		this.length = value;
+	}
 
+	/**
+	 * <p>
+	 * Java class for anonymous complex type.
+	 * 
+	 * <p>
+	 * The following schema fragment specifies the expected content contained within
+	 * this class.
+	 * 
+	 * <pre>
+	 * &lt;complexType&gt;
+	 *   &lt;complexContent&gt;
+	 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+	 *       &lt;sequence&gt;
+	 *         &lt;element name="part" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+	 *       &lt;/sequence&gt;
+	 *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+	 *     &lt;/restriction&gt;
+	 *   &lt;/complexContent&gt;
+	 * &lt;/complexType&gt;
+	 * </pre>
+	 * 
+	 * 
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = { "part" })
+	public static class Lead {
 
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected         content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType&gt;
-     *   &lt;complexContent&gt;
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
-     *       &lt;sequence&gt;
-     *         &lt;element name="part" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
-     *       &lt;/sequence&gt;
-     *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
-     *     &lt;/restriction&gt;
-     *   &lt;/complexContent&gt;
-     * &lt;/complexType&gt;
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "part"
-    })
-    public static class Lead {
+		@XmlElement(required = true)
+		protected String part;
+		@XmlAttribute(name = "name")
+		protected String name;
 
-        @XmlElement(required = true)
-        protected String part;
-        @XmlAttribute(name = "name")
-        protected String name;
+		/**
+		 * Gets the value of the part property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getPart() {
+			return part;
+		}
 
-        /**
-         * Gets the value of the part property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getPart() {
-            return part;
-        }
+		/**
+		 * Sets the value of the part property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setPart(String value) {
+			this.part = value;
+		}
 
-        /**
-         * Sets the value of the part property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setPart(String value) {
-            this.part = value;
-        }
+		/**
+		 * Gets the value of the name property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getName() {
+			return name;
+		}
 
-        /**
-         * Gets the value of the name property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getName() {
-            return name;
-        }
+		/**
+		 * Sets the value of the name property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setName(String value) {
+			this.name = value;
+		}
 
-        /**
-         * Sets the value of the name property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setName(String value) {
-            this.name = value;
-        }
-
-    }
+	}
 
 }

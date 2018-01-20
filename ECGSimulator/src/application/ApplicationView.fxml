@@ -56,7 +56,7 @@
                   </GridPane>
                </content>
             </TitledPane>
-            <LineChart fx:id="chart" createSymbols="false" legendVisible="false" title="ECG Signal characteristics" verticalZeroLineVisible="false" GridPane.rowIndex="2">
+            <LineChart fx:id="chart" createSymbols="false" legendVisible="false" verticalZeroLineVisible="false" GridPane.rowIndex="2">
               <xAxis>
                 <NumberAxis label="time [ms]" side="BOTTOM" tickMarkVisible="false" fx:id="xAxis" />
               </xAxis>

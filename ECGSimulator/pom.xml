@@ -20,6 +20,7 @@
         <configuration>
           <release>9</release>
         </configuration>
+		<executable>javac9</executable>
       </plugin>
     </plugins>
   </build>
@@ -39,6 +40,12 @@
   <groupId>org.gillius</groupId>
   <artifactId>jfxutils</artifactId>
   <version>1.0</version>
+</dependency>
+<dependency>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.7.0</version>
+  <type>maven-plugin</type>
 </dependency>
   </dependencies>
 </project>

@@ -2,17 +2,21 @@ package generator;
 
 import resources.RythmType;
 
-public class EcgGenerationConfig {
+public class EcgGenerationConfiguration {
 
 	RythmType rythmType;
+
+	/**
+	 * Heart rate interval in miliseconds.
+	 */
 	int heartRate;
 
-	public EcgGenerationConfig(RythmType rythmType, int heartRate) {
+	public EcgGenerationConfiguration(RythmType rythmType, int heartRate) {
 		this.rythmType = rythmType;
 		this.heartRate = heartRate;
 	}
 
-	public EcgGenerationConfig() {
+	public EcgGenerationConfiguration() {
 	}
 
 	public RythmType getRythmType() {
@@ -23,10 +27,16 @@ public class EcgGenerationConfig {
 		this.rythmType = rythmType;
 	}
 
+	/**
+	 * Heart rate interval in miliseconds.
+	 */
 	public int getHeartRate() {
 		return heartRate;
 	}
 
+	/**
+	 * Sets heart rate interval in miliseconds.
+	 */
 	public void setHeartRate(int heartRate) {
 		this.heartRate = heartRate;
 	}

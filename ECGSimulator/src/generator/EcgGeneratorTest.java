@@ -10,19 +10,19 @@ import resources.RythmType;
 
 public class EcgGeneratorTest {
 
-	EcgGenerationConfig sinusRythmGenerationConfig;
-	EcgGenerationConfig tachycardiaGenerationConfig;
-	EcgGenerationConfig bradycardiaGenerationConfig;
+	EcgGenerationConfiguration sinusRythmGenerationConfig;
+	EcgGenerationConfiguration tachycardiaGenerationConfig;
+	EcgGenerationConfiguration bradycardiaGenerationConfig;
 
 	@Before
 	public void setUp() throws Exception {
-		sinusRythmGenerationConfig = new EcgGenerationConfig();
+		sinusRythmGenerationConfig = new EcgGenerationConfiguration();
 		sinusRythmGenerationConfig.setHeartRate(70);
 		sinusRythmGenerationConfig.setRythmType(RythmType.SINUS_RYTHM);
-		tachycardiaGenerationConfig = new EcgGenerationConfig();
+		tachycardiaGenerationConfig = new EcgGenerationConfiguration();
 		tachycardiaGenerationConfig.setHeartRate(160);
 		tachycardiaGenerationConfig.setRythmType(RythmType.TACHYCARDIA_SUPRAVENTRICULARIS);
-		bradycardiaGenerationConfig = new EcgGenerationConfig();
+		bradycardiaGenerationConfig = new EcgGenerationConfiguration();
 		bradycardiaGenerationConfig.setHeartRate(40);
 		bradycardiaGenerationConfig.setRythmType(RythmType.BRADYCARDIA);
 	}

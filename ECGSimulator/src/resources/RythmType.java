@@ -2,13 +2,14 @@ package resources;
 
 public enum RythmType {
 
-	SINUS_RYTHM(1, "Sinus Rythm"),
-	TACHYCARDIA_SUPRAVENTRICULARIS(2, "Tachycardia Supraventricularis"),
-	BRADYCARDIA(3, "Bradycardia"),
-	ATRIAL_FIBRILATION(4, "Atrial Fibrilation");
+	SINUS_RYTHM(1, "Sinus Rythm", Constants.SAMPLES_PATH + "\\_1_sinus_rythm"),
+	TACHYCARDIA_SUPRAVENTRICULARIS(2, "Tachycardia Supraventricularis", Constants.SAMPLES_PATH + "\\_2_tachycardia"),
+	BRADYCARDIA(3, "Bradycardia", Constants.SAMPLES_PATH + "\\_3_bradycardia"),
+	ATRIAL_FIBRILATION(4, "Atrial Fibrilation", Constants.SAMPLES_PATH + "\\_4_atrial_fib");
 
 	int id;
 	String name;
+	String resourcePath;
 
 	public int getId() {
 		return id;
@@ -18,7 +19,7 @@ public enum RythmType {
 		return name;
 	}
 
-	private RythmType(int id, String name) {
+	private RythmType(int id, String name, String resourcePath) {
 		this.id = id;
 		this.name = name;
 	}

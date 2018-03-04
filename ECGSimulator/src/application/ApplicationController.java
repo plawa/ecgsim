@@ -8,7 +8,6 @@ import javax.xml.bind.JAXBException;
 
 import org.gillius.jfxutils.chart.JFXChartUtil;
 
-import enums.PredefinedLead;
 import enums.RythmType;
 import generator.EcgGenerationParameters;
 import generator.EcgGenerator;
@@ -123,8 +122,8 @@ public class ApplicationController {
 
 	private EcgGenerationParameters retrieveGenerationParameters() {
 		RythmType rythmType = diseaseCombobox.getValue();
-		int heartRate = 30;
-		EcgGenerationParameters config = new EcgGenerationParameters(rythmType, heartRate, PredefinedLead.I);
+		int heartRate = 60;
+		EcgGenerationParameters config = new EcgGenerationParameters(rythmType, heartRate, LeadType.I);
 		return config;
 	}
 

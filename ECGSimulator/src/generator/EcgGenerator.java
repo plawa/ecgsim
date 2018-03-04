@@ -1,7 +1,5 @@
 package generator;
 
-import java.util.List;
-
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
 import parser.generated.jaxb.LeadType;
@@ -10,17 +8,25 @@ import resources.Constants;
 public class EcgGenerator {
 
 	public static Ecg generate(EcgGenerationParameters config) {
-		Ecg result = new Ecg();
 		int heartRate = config.getHeartRate();
-		int length = calculateLength(heartRate);
-		result.setLength((short) length);
-		result.setRate((short) heartRate);
-		List<Lead> leads = result.getLead();
-		Lead leadAVR = new Lead();
-		leadAVR.setName(LeadType.I);
-		leadAVR.setPart(generateSignal(heartRate, length));
-		leads.add(leadAVR);
+		Ecg result = initializeResult(heartRate);
+		Lead lead = createLeadPart(heartRate);
+		result.addLead(lead);
 		return result;
+	}
+
+	private static Ecg initializeResult(int heartRate) {
+		Ecg result = new Ecg();
+		result.setLength((short) Constants.ECG_SIGNAL_LENGTH);
+		result.setRate((short) heartRate);
+		return result;
+	}
+
+	private static Lead createLeadPart(int heartRate) {
+		Lead lead = new Lead();
+		lead.setName(LeadType.I);
+		lead.setPart(generateSignal(heartRate, Constants.ECG_SIGNAL_LENGTH));
+		return lead;
 	}
 
 	private static String generateSignal(int heartRate, int length) {
@@ -29,12 +35,7 @@ public class EcgGenerator {
 			sb.append(Integer.toString(1));
 			sb.append(Constants.CHARACTER_SPACE);
 		}
-		// sb.append("last value!");
+		sb.append("");
 		return sb.toString();
 	}
-
-	private static int calculateLength(int heartRate) {
-		return Constants.SIGNAL_TIME_IN_SECONDS * heartRate;
-	}
-
 }

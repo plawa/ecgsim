@@ -1,15 +1,15 @@
 package generator;
 
-import enums.PredefinedLead;
 import enums.RythmType;
+import parser.generated.jaxb.LeadType;
 
 public class EcgGenerationParameters {
 
 	private RythmType rythmType;
 	private int heartRate;
-	private PredefinedLead lead;
+	private LeadType lead;
 
-	public EcgGenerationParameters(RythmType rythmType, int heartRate, PredefinedLead lead) {
+	public EcgGenerationParameters(RythmType rythmType, int heartRate, LeadType lead) {
 		this.rythmType = rythmType;
 		this.heartRate = heartRate;
 	}
@@ -39,11 +39,11 @@ public class EcgGenerationParameters {
 		this.heartRate = heartRate;
 	}
 
-	public PredefinedLead getLead() {
+	public LeadType getLead() {
 		return lead;
 	}
 
-	public void setLead(PredefinedLead lead) {
+	public void setLead(LeadType lead) {
 		this.lead = lead;
 	}
 
@@ -57,7 +57,7 @@ public class EcgGenerationParameters {
 		return this;
 	}
 
-	public EcgGenerationParameters withLead(PredefinedLead lead) {
+	public EcgGenerationParameters withLead(LeadType lead) {
 		this.lead = lead;
 		return this;
 	}

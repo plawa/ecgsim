@@ -94,6 +94,13 @@ public class Ecg {
 		return this.lead;
 	}
 
+	public void addLead(Ecg.Lead leadToAdd) {
+		if (lead == null) {
+			lead = new ArrayList<Ecg.Lead>();
+		}
+		lead.add(leadToAdd);
+	}
+
 	/**
 	 * Gets the value of the rate property.
 	 * 

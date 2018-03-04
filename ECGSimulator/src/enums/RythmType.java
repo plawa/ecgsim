@@ -1,4 +1,6 @@
-package resources;
+package enums;
+
+import resources.Constants;
 
 public enum RythmType {
 

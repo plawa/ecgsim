@@ -2,13 +2,14 @@ package generator;
 
 import java.util.List;
 
+import enums.PredefinedLead;
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
 import resources.Constants;
 
 public class EcgGenerator {
 
-	public static Ecg generate(EcgGenerationConfiguration config) {
+	public static Ecg generate(EcgGenerationParameters config) {
 		Ecg result = new Ecg();
 		int heartRate = config.getHeartRate();
 		int length = calculateLength(heartRate);
@@ -16,7 +17,7 @@ public class EcgGenerator {
 		result.setRate((short) heartRate);
 		List<Lead> leads = result.getLead();
 		Lead leadAVR = new Lead();
-		leadAVR.setName(Constants.LEAD_NAME_AVL);
+		leadAVR.setName(PredefinedLead.I.getStringValue());
 		leadAVR.setPart(generateSignal(heartRate, length));
 		leads.add(leadAVR);
 		return result;
@@ -28,7 +29,7 @@ public class EcgGenerator {
 			sb.append(Integer.toString(1));
 			sb.append(Constants.CHARACTER_SPACE);
 		}
-		sb.append("last value!");
+		// sb.append("last value!");
 		return sb.toString();
 	}
 

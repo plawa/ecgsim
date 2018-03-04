@@ -15,11 +15,11 @@ import parser.generated.jaxb.Ecg;
  */
 public class EcgMarshaller {
 
-	private static final String VALUE_JAXB_JAXB_CONTEXT_FACTORY = "org.eclipse.persistence.jaxb.JAXBContextFactory";
+	private static final String VALUE_JAXB_CONTEXT_FACTORY = "org.eclipse.persistence.jaxb.JAXBContextFactory";
 	private static final String PROPERTY_JAVAX_XML_BIND_JAXB_CONTEXT_FACTORY = "javax.xml.bind.JAXBContextFactory";
 
 	static {
-		System.setProperty(PROPERTY_JAVAX_XML_BIND_JAXB_CONTEXT_FACTORY, VALUE_JAXB_JAXB_CONTEXT_FACTORY);
+		System.setProperty(PROPERTY_JAVAX_XML_BIND_JAXB_CONTEXT_FACTORY, VALUE_JAXB_CONTEXT_FACTORY);
 	}
 
 	public static Ecg unmarshall(String fileUrl) throws JAXBException {
@@ -34,6 +34,7 @@ public class EcgMarshaller {
 		File outputFile = new File(fileUrl);
 		JAXBContext jaxbContext = JAXBContext.newInstance(Ecg.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		jaxbMarshaller.marshal(data, outputFile);
 	}
 }

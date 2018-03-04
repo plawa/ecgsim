@@ -1,7 +1,5 @@
 package parser.mapper;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -10,7 +8,10 @@ import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 import parser.generated.jaxb.Ecg;
+import parser.generated.jaxb.LeadType;
 import resources.TestConstants;
 
 public class EcgMarshallerTest {
@@ -52,7 +53,7 @@ public class EcgMarshallerTest {
 		ecg.setLength(Short.valueOf((short) 7000));
 		ecg.setRate(Short.valueOf((short) 50));
 		Ecg.Lead lead = new Ecg.Lead();
-		lead.setName("leadName");
+		lead.setName(LeadType.I);
 		lead.setPart("leadPart");
 		ecg.getLead().add(lead);
 		return ecg;

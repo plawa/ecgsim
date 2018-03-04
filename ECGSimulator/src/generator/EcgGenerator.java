@@ -2,9 +2,9 @@ package generator;
 
 import java.util.List;
 
-import enums.PredefinedLead;
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
+import parser.generated.jaxb.LeadType;
 import resources.Constants;
 
 public class EcgGenerator {
@@ -17,7 +17,7 @@ public class EcgGenerator {
 		result.setRate((short) heartRate);
 		List<Lead> leads = result.getLead();
 		Lead leadAVR = new Lead();
-		leadAVR.setName(PredefinedLead.I.getStringValue());
+		leadAVR.setName(LeadType.I);
 		leadAVR.setPart(generateSignal(heartRate, length));
 		leads.add(leadAVR);
 		return result;

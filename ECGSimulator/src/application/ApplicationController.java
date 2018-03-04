@@ -8,6 +8,7 @@ import javax.xml.bind.JAXBException;
 
 import org.gillius.jfxutils.chart.JFXChartUtil;
 
+import enums.PredefinedLead;
 import enums.RythmType;
 import generator.EcgGenerationParameters;
 import generator.EcgGenerator;
@@ -27,6 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
+import parser.generated.jaxb.LeadType;
 import parser.mapper.EcgMarshaller;
 import resources.Constants;
 
@@ -44,7 +46,7 @@ public class ApplicationController {
 	private ComboBox<RythmType> diseaseCombobox;
 
 	@FXML
-	private ComboBox<String> leadCombobox;
+	private ComboBox<LeadType> leadCombobox;
 
 	@FXML
 	private LineChart<Integer, Integer> chart;
@@ -81,6 +83,7 @@ public class ApplicationController {
 			Ecg ecgLoaded = EcgMarshaller.unmarshall(filepath.getText());
 			loadEcg(ecgLoaded);
 		} catch (JAXBException e) {
+			e.printStackTrace();
 			new Alert(AlertType.ERROR, MSG_INVALID_PATH).show();
 		}
 	}
@@ -92,7 +95,7 @@ public class ApplicationController {
 	}
 
 	private void defaultLead() {
-		String firstValue = leadCombobox.getItems().iterator().next();
+		LeadType firstValue = leadCombobox.getItems().iterator().next();
 		leadCombobox.setValue(firstValue);
 	}
 
@@ -107,19 +110,28 @@ public class ApplicationController {
 		EcgGenerationParameters config = retrieveGenerationParameters();
 		Ecg ecgGenerated = EcgGenerator.generate(config);
 		loadEcg(ecgGenerated);
+		saveFile(ecgGenerated);
+	}
+
+	private void saveFile(Ecg ecgGenerated) {
+		try {
+			EcgMarshaller.marshall(ecgGenerated, Constants.DEFAULT_SAVE_PATH);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private EcgGenerationParameters retrieveGenerationParameters() {
 		RythmType rythmType = diseaseCombobox.getValue();
 		int heartRate = 30;
-		EcgGenerationParameters config = new EcgGenerationParameters(rythmType, heartRate);
+		EcgGenerationParameters config = new EcgGenerationParameters(rythmType, heartRate, PredefinedLead.I);
 		return config;
 	}
 
 	private void loadChart(Ecg signal) {
-		String selectedLead = leadCombobox.getValue();
+		LeadType selectedLead = leadCombobox.getValue();
 		if (selectedLead != null) {
-			String part = signal.getLead().stream().filter(l -> l.getName().equals(selectedLead))
+			String part = signal.getLead().stream().filter(l -> l.getName() == selectedLead)
 					.map(Lead::getPart).findAny().get();
 			XYChart.Series<Integer, Integer> series = new XYChart.Series<>();
 			String[] points = part.split(Constants.CHARACTER_SPACE);
@@ -131,8 +143,8 @@ public class ApplicationController {
 	}
 
 	private void populateLeadCombobox() {
-		List<String> leadNames = currentEcgSignal.getLead().stream().map(Lead::getName).collect(Collectors.toList());
-		// leadCombobox.getItems().clear();
+		List<LeadType> leadNames = currentEcgSignal.getLead().stream().map(Lead::getName)
+				.collect(Collectors.toList());
 		leadCombobox.setItems(FXCollections.observableArrayList(leadNames));
 	}
 

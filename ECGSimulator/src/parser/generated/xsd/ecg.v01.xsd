@@ -1,18 +1,35 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="ecg">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="lead" maxOccurs="unbounded" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element type="xs:string" name="part"/>
-            </xs:sequence>
-            <xs:attribute type="xs:string" name="name" use="optional"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-      <xs:attribute type="xs:short" name="rate"/>
-      <xs:attribute type="xs:short" name="length"/>
-    </xs:complexType>
-  </xs:element>
+<xs:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="leadType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="I" />
+			<xs:enumeration value="II" />
+			<xs:enumeration value="III" />
+			<xs:enumeration value="aVR" />
+			<xs:enumeration value="aVL" />
+			<xs:enumeration value="aVF" />
+			<xs:enumeration value="V1" />
+			<xs:enumeration value="V2" />
+			<xs:enumeration value="V3" />
+			<xs:enumeration value="V4" />
+			<xs:enumeration value="V5" />
+			<xs:enumeration value="V6" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ecg">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="lead" maxOccurs="unbounded" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="part" />
+						</xs:sequence>
+           				 <xs:attribute type="leadType" name="name" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute type="xs:short" name="rate" />
+			<xs:attribute type="xs:short" name="length" />
+		</xs:complexType>
+	</xs:element>
 </xs:schema>

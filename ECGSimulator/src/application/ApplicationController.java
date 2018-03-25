@@ -65,6 +65,7 @@ public class ApplicationController {
 		JFXChartUtil.setupZooming(chart);
 		JFXChartUtil.addDoublePrimaryClickAutoRangeHandler(chart);
 		filepath.focusedProperty().addListener(new FilepathTextFieldFocusLostChangeListener());
+		filepath.setText("A:\\Studia\\Praca magisterska\\Disc\\CSE_diagnostics\\D_00011.ekg");
 	}
 
 	@FXML

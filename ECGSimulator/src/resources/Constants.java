@@ -14,7 +14,7 @@ public class Constants {
 	public static final int ECG_SIGNAL_LENGTH = ECG_SIGNAL_TIME_IN_SECONDS * ECG_SIGNAL_SAMPLES_PER_SECOND;
 	public static final int CHART_SAMPLING_STEP = 5;
 	public static final String CHARACTER_SPACE = " ";
-	public static final String SAMPLES_PATH = "\\resources\\signal_samples";
+	public static final String SAMPLES_PATH = "/resources/signal_samples/_1_sinus_rythm/";
 	public static final String DEFAULT_SAVE_PATH = "C:\\Users\\Piotrek\\Desktop\\testFile.xml";
 
 }

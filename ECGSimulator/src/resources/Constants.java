@@ -15,6 +15,6 @@ public class Constants {
 	public static final int CHART_SAMPLING_STEP = 5;
 	public static final String CHARACTER_SPACE = " ";
 	public static final String SAMPLES_PATH = "/resources/signal_samples/_1_sinus_rythm/";
-	public static final String DEFAULT_SAVE_PATH = "C:\\Users\\Piotrek\\Desktop\\testFile.xml";
+	public static final String DEFAULT_SAVE_PATH = "C:\\Users\\Piotrek\\Desktop\\8.ekg";
 
 }

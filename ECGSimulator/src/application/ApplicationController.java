@@ -110,8 +110,13 @@ public class ApplicationController {
 	private void generatePressed() {
 		EcgGenerationParameters config = retrieveGenerationParameters();
 		Ecg ecgGenerated = EcgGenerator.generate(config);
-		loadEcg(ecgGenerated);
+		saveAndLoad(ecgGenerated);
+	}
+
+	private void saveAndLoad(Ecg ecgGenerated) {
 		saveFile(ecgGenerated);
+		loadEcg(ecgGenerated);
+		filepath.setText(Constants.DEFAULT_SAVE_PATH);
 	}
 
 	private void saveFile(Ecg ecgGenerated) {

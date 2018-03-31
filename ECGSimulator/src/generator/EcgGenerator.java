@@ -16,22 +16,20 @@ import resources.Constants;
 public class EcgGenerator {
 
 	public static Ecg generate(EcgGenerationParameters config) {
-		int heartRate = config.getHeartRate();
-		Ecg result = initializeResult(heartRate);
-		String selectedSignalPattern = selectRandomSignalPart();
-		List<String> extractedIntervals = IntervalExtractor.extract(selectedSignalPattern);
-		Lead lead = createLeadPart(heartRate, extractedIntervals);
-		result.addLead(lead);
+		Ecg result = initializeResult(config);
+		String randomSignalPartFilename = getRandomFilename();
+		for (LeadType leadType : LeadType.values()) {
+			String selectedSignalPattern = extractSignalPart(randomSignalPartFilename, leadType);
+			List<String> extractedIntervals = IntervalExtractor.extract(selectedSignalPattern);
+			Lead leadElement = createLeadPart(extractedIntervals, leadType);
+			result.addLead(leadElement);
+		}
 		return result;
 	}
 
-	private static String selectRandomSignalPart() {
-		Random generator = new Random();
-		List<String> signalPartsList = getResourceFiles(Constants.SAMPLES_PATH);
-		String randomSignalPartFilename = signalPartsList.get(generator.nextInt(signalPartsList.size()));
-		System.out.println("Selected signal part: " + randomSignalPartFilename);
+	private static String extractSignalPart(String filename, LeadType leadType) {
 		InputStream signalPart = EcgGenerator.class
-				.getResourceAsStream(Constants.SAMPLES_PATH + randomSignalPartFilename);
+				.getResourceAsStream(Constants.SAMPLES_PATH + leadType.resourceSubPath() + "/" + filename);
 		String signalPartContent = null;
 		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(signalPart))) {
 			signalPartContent = bufferedReader.readLine();
@@ -41,22 +39,30 @@ public class EcgGenerator {
 		return signalPartContent;
 	}
 
-	private static Ecg initializeResult(int heartRate) {
+	private static String getRandomFilename() {
+		Random generator = new Random();
+		List<String> signalPartsList = getResourceFiles(Constants.SAMPLES_PATH + "/" + LeadType.I.resourceSubPath());
+		String randomSignalPartFilename = signalPartsList.get(generator.nextInt(signalPartsList.size()));
+		System.out.println("Selected signal part: " + randomSignalPartFilename);
+		return randomSignalPartFilename;
+	}
+
+	private static Ecg initializeResult(EcgGenerationParameters config) {
 		Ecg result = new Ecg();
 		result.setLength((short) Constants.ECG_SIGNAL_LENGTH);
-		result.setRate((short) heartRate);
+		result.setRate((short) config.getHeartRate());
 		return result;
 	}
 
-	private static Lead createLeadPart(int heartRate, List<String> extractedIntervals) {
+	private static Lead createLeadPart(List<String> extractedIntervals, LeadType leadType) {
 		Lead lead = new Lead();
-		lead.setName(LeadType.I);
-		String part = generateSignal(heartRate, extractedIntervals);
+		lead.setName(leadType);
+		String part = generateSignal(extractedIntervals);
 		lead.setPart(part);
 		return lead;
 	}
 
-	private static String generateSignal(int heartRate, List<String> extractedIntervals) {
+	private static String generateSignal(List<String> extractedIntervals) {
 		StringBuilder sb = new StringBuilder();
 		Random generator = new Random();
 		for (int i = 0; i < 8; i++) {

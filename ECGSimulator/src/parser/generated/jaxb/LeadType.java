@@ -45,37 +45,44 @@ import javax.xml.bind.annotation.XmlType;
 public enum LeadType {
 
 	@XmlEnumValue("I")
-	I("I"),
+	I("I", "I/"),
 	@XmlEnumValue("II")
-	II("II"),
+	II("II", "II/"),
 	@XmlEnumValue("III")
-	III("III"),
+	III("III", "III/"),
 	@XmlEnumValue("aVR")
-	A_VR("aVR"),
+	A_VR("aVR", "aVR/"),
 	@XmlEnumValue("aVL")
-	A_VL("aVL"),
+	A_VL("aVL", "aVL/"),
 	@XmlEnumValue("aVF")
-	A_VF("aVF"),
+	A_VF("aVF", "aVF/"),
 	@XmlEnumValue("V1")
-	V_1("V1"),
+	V_1("V1", "V1/"),
 	@XmlEnumValue("V2")
-	V_2("V2"),
+	V_2("V2", "V2/"),
 	@XmlEnumValue("V3")
-	V_3("V3"),
+	V_3("V3", "V3/"),
 	@XmlEnumValue("V4")
-	V_4("V4"),
+	V_4("V4", "V4/"),
 	@XmlEnumValue("V5")
-	V_5("V5"),
+	V_5("V5", "V5/"),
 	@XmlEnumValue("V6")
-	V_6("V6");
-	private final String value;
+	V_6("V6", "V6/");
 
-	LeadType(String v) {
+	private final String value;
+	private final String resourceSubPath;
+
+	LeadType(String v, String resSubPath) {
 		value = v;
+		resourceSubPath = resSubPath;
 	}
 
 	public String value() {
 		return value;
+	}
+
+	public String resourceSubPath() {
+		return resourceSubPath;
 	}
 
 	public static LeadType fromValue(String v) {

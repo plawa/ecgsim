@@ -24,7 +24,7 @@ public class IntervalExtractor {
 
 	private static List<String> cutIntervals(List<String> stringPoints, List<Integer> indexOfTop) {
 		final int cutRange = Constants.ECG_SIGNAL_SAMPLES_PER_SECOND / 2;
-		return indexOfTop.stream().map((i) -> stringPoints.subList(i - cutRange, i + cutRange))
+		return indexOfTop.stream().map(i -> stringPoints.subList(i - cutRange, i + cutRange))
 				.map(i -> String.join(Constants.CHARACTER_SPACE, i))
 				.collect(Collectors.toList());
 	}

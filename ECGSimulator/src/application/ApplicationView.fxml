@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.*?>
@@ -43,17 +44,25 @@
                <content>
                   <GridPane>
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                      <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="200.0" />
                         <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="60.0" />
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ComboBox fx:id="diseaseCombobox" prefHeight="25.0" prefWidth="277.0" promptText="Select disease" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" />
-                        <Button fx:id="generate" mnemonicParsing="false" onAction="#generate" prefWidth="80.0" text="Generate" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-                        <ComboBox disable="true" promptText="I" snapToPixel="false" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="diseaseCombobox" prefHeight="25.0" prefWidth="277.0" promptText="Select disease" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" />
+                        <Button fx:id="generate" mnemonicParsing="false" onAction="#generatePressed" prefWidth="80.0" text="Generate" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                        <ComboBox disable="true" promptText="I" snapToPixel="false" GridPane.columnIndex="3" />
+                        <Slider fx:id="noiseLevelSlider" prefHeight="14.0" prefWidth="180.0" showTickLabels="true" snapToTicks="true" GridPane.columnIndex="2" />
+                        <Label text="Noise Level:" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </Label>
                      </children>
                   </GridPane>
                </content>

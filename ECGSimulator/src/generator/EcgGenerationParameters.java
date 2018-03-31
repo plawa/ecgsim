@@ -7,6 +7,7 @@ public class EcgGenerationParameters {
 
 	private RythmType rythmType;
 	private int heartRate;
+	private int noiseLevel;
 	private LeadType lead;
 
 	public EcgGenerationParameters(RythmType rythmType, int heartRate, LeadType lead) {
@@ -47,6 +48,14 @@ public class EcgGenerationParameters {
 		this.lead = lead;
 	}
 
+	public int getNoiseLevel() {
+		return noiseLevel;
+	}
+
+	public void setNoiseLevel(int noiseLevel) {
+		this.noiseLevel = noiseLevel;
+	}
+
 	public EcgGenerationParameters withRythmType(RythmType rythmType) {
 		this.rythmType = rythmType;
 		return this;
@@ -59,6 +68,11 @@ public class EcgGenerationParameters {
 
 	public EcgGenerationParameters withLead(LeadType lead) {
 		this.lead = lead;
+		return this;
+	}
+
+	public EcgGenerationParameters withNoiseLevel(int noiseLevel) {
+		this.noiseLevel = noiseLevel;
 		return this;
 	}
 

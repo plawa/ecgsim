@@ -51,16 +51,15 @@ public class EcgGenerator {
 	private static Lead createLeadPart(int heartRate, List<String> extractedIntervals) {
 		Lead lead = new Lead();
 		lead.setName(LeadType.I);
-		String part = generateSignal(heartRate, extractedIntervals, Constants.ECG_SIGNAL_LENGTH);
+		String part = generateSignal(heartRate, extractedIntervals);
 		lead.setPart(part);
 		return lead;
 	}
 
-	private static String generateSignal(int heartRate, List<String> extractedIntervals, int length) {
+	private static String generateSignal(int heartRate, List<String> extractedIntervals) {
 		StringBuilder sb = new StringBuilder();
 		Random generator = new Random();
 		for (int i = 0; i < 8; i++) {
-			String got = sb.toString();
 			String newPart = extractedIntervals.get(generator.nextInt(extractedIntervals.size()));
 			sb.append(newPart + Constants.CHARACTER_SPACE);
 		}
@@ -70,8 +69,7 @@ public class EcgGenerator {
 	private static List<String> getResourceFiles(String path) {
 		List<String> filenames = new ArrayList<>();
 
-		try (
-				InputStream in = getResourceAsStream(path);
+		try (InputStream in = getResourceAsStream(path);
 				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 			String resource;
 
@@ -87,7 +85,6 @@ public class EcgGenerator {
 
 	private static InputStream getResourceAsStream(String resource) {
 		final InputStream in = getContextClassLoader().getResourceAsStream(resource);
-
 		return in == null ? EcgGenerator.class.getResourceAsStream(resource) : in;
 	}
 

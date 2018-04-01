@@ -12,7 +12,7 @@ public class IntervalExtractorTest {
 
 	@Test
 	public void test() {
-		List<String> extractedData = IntervalExtractor.extract(signalPart);
+		List<List<Integer>> extractedData = IntervalExtractor.extract(signalPart);
 		assertThat(extractedData, notNullValue());
 	}
 

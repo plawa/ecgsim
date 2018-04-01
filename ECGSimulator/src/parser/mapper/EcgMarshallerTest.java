@@ -53,8 +53,8 @@ public class EcgMarshallerTest {
 		ecg.setLength(Short.valueOf((short) 7000));
 		ecg.setRate(Short.valueOf((short) 50));
 		Ecg.Lead lead = new Ecg.Lead();
-		lead.setName(LeadType.I);
-		lead.setPart("leadPart");
+		lead.setLeadType(LeadType.I);
+		lead.setSignal("leadPart");
 		ecg.getLead().add(lead);
 		return ecg;
 	}

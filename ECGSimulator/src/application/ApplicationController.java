@@ -138,8 +138,8 @@ public class ApplicationController {
 	private void loadChart(Ecg signal) {
 		LeadType selectedLead = leadCombobox.getValue();
 		if (selectedLead != null) {
-			String part = signal.getLead().stream().filter(l -> l.getName() == selectedLead)
-					.map(Lead::getPart).findAny().get();
+			String part = signal.getLead().stream().filter(l -> l.getLeadType() == selectedLead)
+					.map(Lead::getSignal).findAny().get();
 			XYChart.Series<Integer, Integer> series = new XYChart.Series<>();
 			String[] points = part.split(Constants.CHARACTER_SPACE);
 			for (int i = 0; i < points.length; i += Constants.CHART_SAMPLING_STEP) {
@@ -150,7 +150,7 @@ public class ApplicationController {
 	}
 
 	private void populateLeadCombobox() {
-		List<LeadType> leadNames = currentEcgSignal.getLead().stream().map(Lead::getName)
+		List<LeadType> leadNames = currentEcgSignal.getLead().stream().map(Lead::getLeadType)
 				.collect(Collectors.toList());
 		leadCombobox.setItems(FXCollections.observableArrayList(leadNames));
 	}

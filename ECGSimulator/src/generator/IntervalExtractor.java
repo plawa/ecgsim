@@ -3,8 +3,7 @@ package generator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.google.inject.internal.util.Lists;
+import java.util.stream.Stream;
 
 import javafx.util.Pair;
 import resources.Constants;
@@ -14,19 +13,16 @@ public class IntervalExtractor {
 	private static final int END_INTERVAL_NUMBER = 8;
 	private static final int START_INTERVAL_NUMBER = 2;
 
-	public static List<String> extract(String signalData) {
-		List<String> stringPoints = Lists.newArrayList(signalData.split(Constants.CHARACTER_SPACE));
-		List<Integer> points = stringPoints.stream().map(Integer::parseInt).collect(Collectors.toList());
-		List<Integer> indexOfTop = findIndexesOfTops(points);
-		List<String> cutIntervals = cutIntervals(stringPoints, indexOfTop);
-		return cutIntervals;
+	public static List<List<Integer>> extract(String signalData) {
+		final String[] pointsSplit = signalData.split(Constants.CHARACTER_SPACE);
+		final List<Integer> pointsInt = Stream.of(pointsSplit).map(Integer::parseInt).collect(Collectors.toList());
+		final List<Integer> indexesOfTop = findIndexesOfTops(pointsInt);
+		return cutIntervals(pointsInt, indexesOfTop);
 	}
 
-	private static List<String> cutIntervals(List<String> stringPoints, List<Integer> indexOfTop) {
-		final int cutRange = Constants.ECG_SIGNAL_SAMPLES_PER_SECOND / 2;
-		return indexOfTop.stream().map(i -> stringPoints.subList(i - cutRange, i + cutRange))
-				.map(i -> String.join(Constants.CHARACTER_SPACE, i))
-				.collect(Collectors.toList());
+	private static List<List<Integer>> cutIntervals(List<Integer> points, List<Integer> indexesOfTop) {
+		final int cutRange = (indexesOfTop.get(1) - indexesOfTop.get(0)) / 2;
+		return indexesOfTop.stream().map(i -> points.subList(i - cutRange, i + cutRange)).collect(Collectors.toList());
 	}
 
 	private static List<Integer> findIndexesOfTops(List<Integer> points) {

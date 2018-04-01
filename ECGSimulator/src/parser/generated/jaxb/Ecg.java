@@ -183,7 +183,7 @@ public class Ecg {
 		 * @return possible object is {@link String }
 		 * 
 		 */
-		public String getPart() {
+		public String getSignal() {
 			return part;
 		}
 
@@ -194,7 +194,7 @@ public class Ecg {
 		 *            allowed object is {@link String }
 		 * 
 		 */
-		public void setPart(String value) {
+		public void setSignal(String value) {
 			this.part = value;
 		}
 
@@ -204,7 +204,7 @@ public class Ecg {
 		 * @return possible object is {@link LeadType }
 		 * 
 		 */
-		public LeadType getName() {
+		public LeadType getLeadType() {
 			return name;
 		}
 
@@ -215,7 +215,7 @@ public class Ecg {
 		 *            allowed object is {@link LeadType }
 		 * 
 		 */
-		public void setName(LeadType value) {
+		public void setLeadType(LeadType value) {
 			this.name = value;
 		}
 

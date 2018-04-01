@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.google.common.base.Joiner;
 
@@ -21,13 +23,23 @@ public class EcgGenerator {
 	public static Ecg generate(EcgGenerationParameters config) {
 		Ecg result = initializeResult(config);
 		String randomSignalPartFilename = getRandomFilename();
+		List<Integer> generationSequence = randomizeSequence();
+		List<Integer> cutPoints = IntervalExtractor
+				.retrieveCutPoints(extractSignalPart(randomSignalPartFilename, LeadType.I));
 		for (LeadType leadType : LeadType.values()) {
 			String selectedSignalPattern = extractSignalPart(randomSignalPartFilename, leadType);
-			final List<List<Integer>> extractedIntervals = IntervalExtractor.extract(selectedSignalPattern);
+			final List<List<Integer>> extractedIntervals = IntervalExtractor.extract(selectedSignalPattern, cutPoints);
 			addNoiseIfRequested(extractedIntervals, config.getNoiseLevel());
-			result.addLead(createLeadPart(extractedIntervals, leadType));
+			result.addLead(createLeadPart(extractedIntervals, leadType, generationSequence));
 		}
 		return result;
+	}
+
+	private static List<Integer> randomizeSequence() {
+		Random generator = new Random();
+		final int generatorUpperBound = 5;
+		return IntStream.generate(() -> generator.nextInt(generatorUpperBound)).limit(30).boxed()
+				.collect(Collectors.toList());
 	}
 
 	private static void addNoiseIfRequested(List<List<Integer>> extractedIntervals, int noiseLevel) {
@@ -70,20 +82,20 @@ public class EcgGenerator {
 		return result;
 	}
 
-	private static Lead createLeadPart(List<List<Integer>> extractedIntervals, LeadType leadType) {
+	private static Lead createLeadPart(List<List<Integer>> extractedIntervals, LeadType leadType,
+			List<Integer> generationSequence) {
 		Lead lead = new Lead();
 		lead.setLeadType(leadType);
-		String part = generateSignal(extractedIntervals);
+		String part = generateSignal(extractedIntervals, generationSequence);
 		lead.setSignal(part);
 		return lead;
 	}
 
-	private static String generateSignal(List<List<Integer>> extractedIntervals) {
-		Random generator = new Random();
-		final int generatorUpperBound = extractedIntervals.size();
+	private static String generateSignal(List<List<Integer>> extractedIntervals, List<Integer> generationSequence) {
 		List<Integer> signal = new ArrayList<>();
+		Iterator<Integer> sequenceIterator = generationSequence.iterator();
 		while (signal.size() < Constants.ECG_SIGNAL_LENGTH) {
-			List<Integer> intervalToAdd = extractedIntervals.get(generator.nextInt(generatorUpperBound));
+			List<Integer> intervalToAdd = extractedIntervals.get(sequenceIterator.next());
 			signal.addAll(intervalToAdd);
 		}
 		List<Integer> signalTrimmed = signal.subList(0, Constants.ECG_SIGNAL_LENGTH);

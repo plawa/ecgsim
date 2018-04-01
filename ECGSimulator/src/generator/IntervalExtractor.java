@@ -20,6 +20,18 @@ public class IntervalExtractor {
 		return cutIntervals(pointsInt, indexesOfTop);
 	}
 
+	public static List<List<Integer>> extract(String signalData, List<Integer> cutPoints) {
+		final String[] pointsSplit = signalData.split(Constants.CHARACTER_SPACE);
+		final List<Integer> pointsInt = Stream.of(pointsSplit).map(Integer::parseInt).collect(Collectors.toList());
+		return cutIntervals(pointsInt, cutPoints);
+	}
+
+	public static List<Integer> retrieveCutPoints(String signalData) {
+		final String[] pointsSplit = signalData.split(Constants.CHARACTER_SPACE);
+		final List<Integer> pointsInt = Stream.of(pointsSplit).map(Integer::parseInt).collect(Collectors.toList());
+		return findIndexesOfTops(pointsInt);
+	}
+
 	private static List<List<Integer>> cutIntervals(List<Integer> points, List<Integer> indexesOfTop) {
 		final int cutRange = (indexesOfTop.get(1) - indexesOfTop.get(0)) / 2;
 		return indexesOfTop.stream().map(i -> points.subList(i - cutRange, i + cutRange)).collect(Collectors.toList());

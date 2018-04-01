@@ -20,10 +20,14 @@ public class ChartSupport {
 	};
 
 	public static void setupZooming(LineChart<?, ?> chart) {
-
 		JFXChartUtil.setupZooming(chart, RIGHT_BUTTON_ONLY);
 		JFXChartUtil.addDoublePrimaryClickAutoRangeHandler(chart);
 		setupMovingByLeftMouseButton(chart);
+	}
+
+	public static void resetChartZoom(LineChart<?, ?> chart) {
+		chart.getXAxis().setAutoRanging(true);
+		chart.getYAxis().setAutoRanging(true);
 	}
 
 	private static void setupMovingByLeftMouseButton(LineChart<?, ?> chart) {

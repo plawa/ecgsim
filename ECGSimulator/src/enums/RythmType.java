@@ -21,6 +21,10 @@ public enum RythmType {
 		return name;
 	}
 
+	public String getResourcePath() {
+		return resourcePath;
+	}
+
 	private RythmType(int id, String name, String resourcePath) {
 		this.id = id;
 		this.name = name;

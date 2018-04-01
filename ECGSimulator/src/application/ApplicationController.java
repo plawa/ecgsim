@@ -103,7 +103,7 @@ public class ApplicationController {
 	@FXML
 	private void visualize() throws JAXBException {
 		loadChart(currentEcgSignal);
-		resetChartZoom();
+		ChartSupport.resetChartZoom(chart);
 	}
 
 	@FXML
@@ -114,8 +114,8 @@ public class ApplicationController {
 	}
 
 	private void saveAndLoad(Ecg ecgGenerated) {
-		saveFile(ecgGenerated);
 		loadEcg(ecgGenerated);
+		saveFile(ecgGenerated);
 		filepath.setText(Constants.DEFAULT_SAVE_PATH);
 	}
 
@@ -153,11 +153,6 @@ public class ApplicationController {
 		List<LeadType> leadNames = currentEcgSignal.getLead().stream().map(Lead::getName)
 				.collect(Collectors.toList());
 		leadCombobox.setItems(FXCollections.observableArrayList(leadNames));
-	}
-
-	private void resetChartZoom() {
-		chart.getXAxis().setAutoRanging(true);
-		chart.getYAxis().setAutoRanging(true);
 	}
 
 	public void setStage(Stage stage) {

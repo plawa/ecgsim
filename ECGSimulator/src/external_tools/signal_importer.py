@@ -9,7 +9,7 @@ def main():
 	for filename in [f for f in os.listdir(source_dir) if f.endswith('txt')]:
 		filepath = os.path.join(source_dir, filename)
 		with open(filepath, 'r') as file:
-			for line in [line for i, line in enumerate(file) if i == 1 and 'Rytm zatokowy miarowy' in line]:
+			for line in [line for i, line in enumerate(file) if 'Wykryto bigeminię komorową' in line]: # i == 1 and
 				handle_signal(filename, filepath)
 
 def handle_signal(filename, filepath):
@@ -18,11 +18,11 @@ def handle_signal(filename, filepath):
 		save_part = extract_lead(ekg_filepath, lead_number)
 		signalpart_filename = filename.replace('ekg.txt', 'signalpart')
 		print('saving: ' + signalpart_filename)
-		save_dir = os.path.join(target_dir, str(lead_number))
-		if not os.path.exists(save_dir):
-			os.makedirs(save_dir)
-		with open(os.path.join(save_dir, signalpart_filename), 'w') as to_save:
-			to_save.write(save_part)
+		# save_dir = os.path.join(target_dir, str(lead_number))
+		# if not os.path.exists(save_dir):
+			# os.makedirs(save_dir)
+		# with open(os.path.join(save_dir, signalpart_filename), 'w') as to_save:
+			# to_save.write(save_part)
 
 
 def extract_lead(filepath, no):

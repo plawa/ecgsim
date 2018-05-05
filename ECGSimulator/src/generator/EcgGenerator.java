@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class EcgGenerator {
 		for (LeadType leadType : LeadType.values()) {
 			String selectedSignalPattern = extractSignalPart(randomSignalPartFilename, leadType);
 			final List<List<Integer>> extractedIntervals = IntervalExtractor.extract(selectedSignalPattern, cutPoints);
-			addNoiseIfRequested(extractedIntervals, config.getNoiseLevel());
+			addNoise(extractedIntervals, config.getNoiseLevel());
 			result.addLead(createLeadPart(extractedIntervals, leadType, generationSequence));
 		}
 		return result;
@@ -42,7 +43,7 @@ public class EcgGenerator {
 				.collect(Collectors.toList());
 	}
 
-	private static void addNoiseIfRequested(List<List<Integer>> extractedIntervals, int noiseLevel) {
+	private static void addNoise(List<List<Integer>> extractedIntervals, int noiseLevel) {
 		if (noiseLevel > 0) {
 			Random generator = new Random();
 			for (int i = 0; i < extractedIntervals.size(); i++) {
@@ -92,14 +93,26 @@ public class EcgGenerator {
 	}
 
 	private static String generateSignal(List<List<Integer>> extractedIntervals, List<Integer> generationSequence) {
-		List<Integer> signal = new ArrayList<>();
+		LinkedList<Integer> signal = new LinkedList<>();
 		Iterator<Integer> sequenceIterator = generationSequence.iterator();
 		while (signal.size() < Constants.ECG_SIGNAL_LENGTH) {
-			List<Integer> intervalToAdd = extractedIntervals.get(sequenceIterator.next());
-			signal.addAll(intervalToAdd);
+			List<Integer> nextInterval = extractedIntervals.get(sequenceIterator.next());
+			addNormalizedSignalValue(signal, nextInterval);
 		}
 		List<Integer> signalTrimmed = signal.subList(0, Constants.ECG_SIGNAL_LENGTH);
 		return Joiner.on(Constants.CHARACTER_SPACE).join(signalTrimmed);
+	}
+
+	private static void addNormalizedSignalValue(LinkedList<Integer> signal, List<Integer> nextInterval) {
+		List<Integer> intervalToAdd = nextInterval;
+		if (!signal.isEmpty()) {
+			Integer lastPoint = signal.getLast();
+			Integer firstPointOfNewSignal = nextInterval.iterator().next();
+			Integer diff = lastPoint - firstPointOfNewSignal;
+			intervalToAdd = nextInterval.stream().mapToInt(Integer::intValue).map(p -> p + diff).boxed()
+					.collect(Collectors.toList());
+		}
+		signal.addAll(intervalToAdd);
 	}
 
 	private static List<String> getResourceFiles(String path) {
@@ -107,8 +120,8 @@ public class EcgGenerator {
 
 		try (InputStream in = getResourceAsStream(path);
 				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-			String resource;
 
+			String resource;
 			while ((resource = br.readLine()) != null) {
 				filenames.add(resource);
 			}

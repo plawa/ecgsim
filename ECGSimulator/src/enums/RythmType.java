@@ -1,33 +1,43 @@
 package enums;
 
-import resources.Constants;
+import java.util.List;
 
 public enum RythmType {
 
-	SINUS_RYTHM(1, "Sinus Rythm", Constants.SAMPLES_PATH + "\\_1_sinus_rythm"),
-	TACHYCARDIA_SUPRAVENTRICULARIS(2, "Tachycardia Supraventricularis", Constants.SAMPLES_PATH + "\\_2_tachycardia"),
-	BRADYCARDIA(3, "Bradycardia", Constants.SAMPLES_PATH + "\\_3_bradycardia"),
-	ATRIAL_FIBRILATION(4, "Atrial Fibrilation", Constants.SAMPLES_PATH + "\\_4_atrial_fib");
+	SINUS_RYTHM(
+			"Sinus Rythm",
+			List.of(Complex.S, Complex.S, Complex.S, Complex.S, Complex.S)),
+	BIGEMINIA_SUPRAVENTRICULAR(
+			"Bigeminia Supraventricularis",
+			List.of(Complex.S, Complex.SV, Complex.S, Complex.SV, Complex.S)),
+	TRIGEMINIA_SUPRAVENTRICULAR(
+			"Trigeminia Supraventricularis",
+			List.of(Complex.S, Complex.S, Complex.SV, Complex.S, Complex.S, Complex.SV, Complex.S, Complex.S)),
+	BIGEMINIA_CHAMBER(
+			"Bigeminia Chamber",
+			List.of(Complex.S, Complex.V, Complex.S, Complex.V, Complex.S)),
+	TRIGEMINIA_CHAMBER(
+			"Trigeminia Chamber",
+			List.of(Complex.S, Complex.S, Complex.V, Complex.S, Complex.S, Complex.V, Complex.S, Complex.S));
 
-	int id;
 	String name;
-	String resourcePath;
-
-	public int getId() {
-		return id;
-	}
+	List<Complex> complexes;
 
 	public String getName() {
 		return name;
 	}
 
-	public String getResourcePath() {
-		return resourcePath;
+	public List<Complex> getComplexesOrder() {
+		return complexes;
 	}
 
-	private RythmType(int id, String name, String resourcePath) {
-		this.id = id;
+	private RythmType(String name, List<Complex> complexes) {
 		this.name = name;
+		this.complexes = complexes;
 	}
 
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

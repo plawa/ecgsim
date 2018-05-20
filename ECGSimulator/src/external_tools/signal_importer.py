@@ -9,7 +9,7 @@ def main():
 	for filename in [f for f in os.listdir(source_dir) if f.endswith('txt')]:
 		filepath = os.path.join(source_dir, filename)
 		with open(filepath, 'r') as file:
-			for line in [line for i, line in enumerate(file) if 'typ: SV' in line]: # i == 1 and
+			for line in [line for i, line in enumerate(file) if 'bigeminię nadkomorową' in line]: # i == 1 and
 				handle_signal(filename, filepath)
 
 def handle_signal(filename, filepath):

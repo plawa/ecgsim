@@ -9,7 +9,7 @@ package resources;
  */
 public class Constants {
 
-	public static final int ECG_SIGNAL_COMPLEX_NUMBER = 10;
+	public static final int ECG_SIGNAL_COMPLEX_NUMBER = 20;
 	public static final int ECG_SIGNAL_TIME_IN_SECONDS = 8;
 	public static final int ECG_SIGNAL_SAMPLES_PER_SECOND = 1000;
 	public static final int ECG_SIGNAL_LENGTH = ECG_SIGNAL_TIME_IN_SECONDS * ECG_SIGNAL_SAMPLES_PER_SECOND;

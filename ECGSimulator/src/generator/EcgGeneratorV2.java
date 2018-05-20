@@ -24,24 +24,24 @@ import resources.Constants;
 public class EcgGeneratorV2 {
 
 	public static Ecg generate(EcgGenerationParameters config) {
-		Ecg result = initializeResult(config);
+		var result = initializeResult(config);
 		RythmType rythmType = config.getRythmType();
-		final List<String> complexFilenames = assignGenerationSources(rythmType);
+		final List<ComplexFilenamePair> signalDetails = assignGenerationSources(rythmType);
 		for (LeadType leadType : LeadType.values()) {
-			List<List<Integer>> complexesOrdered = loadComplexesSignalsAsPoints(complexFilenames, leadType);
+			List<List<Integer>> complexesOrdered = loadComplexesSignalsAsPoints(signalDetails, leadType);
 			addNoise(complexesOrdered, config.getNoiseLevel());
 			result.addLead(createLeadPart(complexesOrdered, leadType));
 		}
 		return result;
 	}
 
-	private static List<String> assignGenerationSources(RythmType rythmType) {
-		final List<String> sourcesFilenames = new ArrayList<>();
+	private static List<ComplexFilenamePair> assignGenerationSources(RythmType rythmType) {
+		final List<ComplexFilenamePair> sourcesFilenames = new ArrayList<>();
 		final Iterator<Complex> complexexOrderIterator = rythmType.getComplexesOrder().iterator();
 		for (int i = 0; i < Constants.ECG_SIGNAL_COMPLEX_NUMBER; i++) {
 			Complex complexNow = complexexOrderIterator.hasNext() ? complexexOrderIterator.next() : Complex.S;
-			String pathToPickFrom = complexNow.getResourcePath();
-			sourcesFilenames.add(getRandomFilename(pathToPickFrom));
+			String pathToPickFrom = complexNow.getResourceSubPath();
+			sourcesFilenames.add(new ComplexFilenamePair(complexNow, getRandomFilename(pathToPickFrom)));
 		}
 		return sourcesFilenames;
 	}
@@ -58,10 +58,12 @@ public class EcgGeneratorV2 {
 		}
 	}
 
-	private static List<List<Integer>> loadComplexesSignalsAsPoints(List<String> complexFilenames, LeadType leadType) {
+	private static List<List<Integer>> loadComplexesSignalsAsPoints(List<ComplexFilenamePair> signalDetails,
+			LeadType leadType) {
 		final List<List<Integer>> complexesSignals = new ArrayList<>();
-		for (String filename : complexFilenames) {
-			String pathToRead = String.format("%s%s%s", Constants.COMPLEXES_PATH, leadType.resourceSubPath(), filename);
+		for (ComplexFilenamePair complexData : signalDetails) {
+			String pathToRead = String.format("%s%s/%s", complexData.getComplex().getResourceSubPath(),
+					leadType.ordinal(), complexData.getFilename());
 			InputStream signalPart = EcgGeneratorV2.class.getResourceAsStream(pathToRead);
 			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(signalPart))) {
 				String complexSignalContent = bufferedReader.readLine();
@@ -129,7 +131,7 @@ public class EcgGeneratorV2 {
 	private static List<String> getResourceFiles(String path) {
 		List<String> filenames = new ArrayList<>();
 
-		try (InputStream in = getResourceAsStream(path);
+		try (InputStream in = getResourceAsStream(path + LeadType.I.ordinal());
 				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 
 			String resource;

@@ -20,7 +20,7 @@ public enum Complex {
 		return code;
 	}
 
-	public String getResourcePath() {
+	public String getResourceSubPath() {
 		return resourcePath;
 	}
 }

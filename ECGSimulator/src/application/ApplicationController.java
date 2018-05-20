@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBException;
 
 import enums.RythmType;
 import generator.EcgGenerationParameters;
-import generator.EcgGenerator;
+import generator.EcgGeneratorV2;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -109,7 +109,7 @@ public class ApplicationController {
 	@FXML
 	private void generatePressed() {
 		EcgGenerationParameters config = retrieveGenerationParameters();
-		Ecg ecgGenerated = EcgGenerator.generate(config);
+		Ecg ecgGenerated = EcgGeneratorV2.generate(config);
 		saveAndLoad(ecgGenerated);
 	}
 

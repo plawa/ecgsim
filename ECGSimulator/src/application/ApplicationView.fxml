@@ -33,7 +33,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="browse" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
+                        <Button fx:id="browseButton" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
                         <TextField fx:id="filepath" onAction="#loadFile" promptText="type *.ekg filepath and press 'enter' or browse for file..." />
                         <ComboBox id="leadCombobox" fx:id="leadCombobox" minWidth="100.0" onAction="#visualize" promptText="Select lead" GridPane.columnIndex="2" />
                      </children>
@@ -53,8 +53,11 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ComboBox fx:id="diseaseCombobox" prefHeight="25.0" prefWidth="277.0" promptText="Select disease" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" />
-                        <Button fx:id="generate" mnemonicParsing="false" onAction="#generatePressed" prefWidth="80.0" text="Generate" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                        <ComboBox fx:id="diseaseCombobox" prefHeight="25.0" prefWidth="277.0" promptText="Select disease" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES">
+                           <effect>
+                              <InnerShadow />
+                           </effect></ComboBox>
+                        <Button fx:id="generateButton" mnemonicParsing="false" onAction="#generatePressed" prefWidth="80.0" text="Generate" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
                         <Slider fx:id="noiseLevelSlider" prefHeight="14.0" prefWidth="180.0" showTickLabels="true" snapToTicks="true" GridPane.columnIndex="2" />
                         <Label text="Noise Level:" GridPane.columnIndex="1">
                            <GridPane.margin>

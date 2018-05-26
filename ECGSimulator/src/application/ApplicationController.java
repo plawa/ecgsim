@@ -9,6 +9,8 @@ import javax.xml.bind.JAXBException;
 import enums.RythmType;
 import generator.EcgGenerationParameters;
 import generator.EcgGeneratorV2;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -38,7 +40,7 @@ public class ApplicationController {
 	private TextField filepath;
 
 	@FXML
-	private Button browse, generate;
+	private Button browseButton, generateButton;
 
 	@FXML
 	private ComboBox<RythmType> diseaseCombobox;
@@ -55,6 +57,8 @@ public class ApplicationController {
 	@FXML
 	private NumberAxis xAxis, yAxis;
 
+	private ObjectProperty<RythmType> diseaseProperty = new SimpleObjectProperty();
+
 	private final FileChooser fileChooser = new FileChooser();
 
 	private Ecg currentEcgSignal;
@@ -64,6 +68,8 @@ public class ApplicationController {
 	@FXML
 	private void initialize() {
 		diseaseCombobox.getItems().setAll(RythmType.values());
+		diseaseCombobox.valueProperty().bindBidirectional(diseaseProperty);
+		generateButton.disableProperty().bind(diseaseProperty.isNull());
 		filepath.focusedProperty().addListener(new FilepathTextFieldFocusLostChangeListener());
 		filepath.setText("A:\\Studia\\Praca magisterska\\Disc\\CSE_diagnostics\\D_00011.ekg");
 		ChartSupport.setupZooming(chart);
@@ -128,7 +134,7 @@ public class ApplicationController {
 	}
 
 	private EcgGenerationParameters retrieveGenerationParameters() {
-		RythmType rythmType = diseaseCombobox.getValue();
+		RythmType rythmType = diseaseProperty.get();
 		int heartRate = 60;
 		EcgGenerationParameters config = new EcgGenerationParameters(rythmType, heartRate, LeadType.I);
 		config.setNoiseLevel((int) noiseLevelSlider.getValue());

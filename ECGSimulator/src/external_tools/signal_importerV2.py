@@ -8,12 +8,12 @@ target_dir = os.path.join(root_dir, 'extracted')
 
 def main():
     # for filename in [f for f in os.listdir(sourc e_dir) if f.endswith('txt')]:
-    filename = 'D_00172.ekg'
+    filename = 'D_00131.ekg'
     filepath = os.path.join(source_dir, filename)
     with open(filepath, 'r') as file:
         # i == 1 and
         # for line in [line for i, line in enumerate(file) if 'typ: SV' in line]:
-        handle_signal(filename, filepath, 850, 1600)
+        handle_signal(filename, filepath, 5800, 6500)
 
 
 def handle_signal(filename, filepath, cut_from, cut_to):
@@ -21,7 +21,7 @@ def handle_signal(filename, filepath, cut_from, cut_to):
         ekg_filepath = filepath.replace('.txt', '')
         save_part = extract_lead(ekg_filepath, lead_number)
         cut_part = save_part.split()[cut_from:cut_to]
-        signalpart_filename = filename.replace('ekg.txt', 'signalpart')
+        signalpart_filename = filename.replace('ekg', 'ekg')
         save_dir = os.path.join(target_dir, str(lead_number))
         print('saving: ' + save_dir + '\\' + signalpart_filename)
         if not os.path.exists(save_dir):

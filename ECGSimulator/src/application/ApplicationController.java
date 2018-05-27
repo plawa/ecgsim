@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import enums.RythmType;
+import common.enums.RythmType;
 import generator.EcgGenerationParameters;
 import generator.EcgGeneratorV2;
 import javafx.beans.property.ObjectProperty;
@@ -18,12 +18,16 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import parser.generated.jaxb.Ecg;
@@ -34,10 +38,8 @@ import resources.Constants;
 
 public class ApplicationController {
 
-	private static final String MSG_INVALID_PATH = "Error occured while loading file. Either the file is invalid or doesn't exist";
-
 	@FXML
-	private TextField filepath;
+	private TextField filepathTextField;
 
 	@FXML
 	private Button browseButton, generateButton;
@@ -57,7 +59,7 @@ public class ApplicationController {
 	@FXML
 	private NumberAxis xAxis, yAxis;
 
-	private ObjectProperty<RythmType> diseaseProperty = new SimpleObjectProperty();
+	private ObjectProperty<RythmType> diseaseProperty = new SimpleObjectProperty<>();
 
 	private final FileChooser fileChooser = new FileChooser();
 
@@ -70,8 +72,8 @@ public class ApplicationController {
 		diseaseCombobox.getItems().setAll(RythmType.values());
 		diseaseCombobox.valueProperty().bindBidirectional(diseaseProperty);
 		generateButton.disableProperty().bind(diseaseProperty.isNull());
-		filepath.focusedProperty().addListener(new FilepathTextFieldFocusLostChangeListener());
-		filepath.setText("A:\\Studia\\Praca magisterska\\Disc\\CSE_diagnostics\\D_00011.ekg");
+		filepathTextField.focusedProperty().addListener(new FilepathTextFieldFocusLostChangeListener());
+		filepathTextField.setText("A:\\Studia\\Praca magisterska\\Disc\\CSE_diagnostics\\D_00011.ekg");
 		ChartSupport.setupZooming(chart);
 	}
 
@@ -79,7 +81,7 @@ public class ApplicationController {
 	private void browsePressed() throws JAXBException {
 		File fileChoosen = fileChooser.showOpenDialog(primaryStage);
 		if (fileChoosen != null) {
-			filepath.setText(fileChoosen.getAbsolutePath());
+			filepathTextField.setText(fileChoosen.getAbsolutePath());
 			loadFile();
 		}
 	}
@@ -87,12 +89,22 @@ public class ApplicationController {
 	@FXML
 	private void loadFile() {
 		try {
-			Ecg ecgLoaded = EcgMarshaller.unmarshall(filepath.getText());
-			loadEcg(ecgLoaded);
+			performLoadFile();
 		} catch (JAXBException e) {
-			e.printStackTrace();
-			new Alert(AlertType.ERROR, MSG_INVALID_PATH).show();
+			handleFileLoadingException(e);
 		}
+	}
+
+	private void performLoadFile() throws JAXBException {
+		Ecg ecgLoaded = EcgMarshaller.unmarshall(filepathTextField.getText());
+		loadEcg(ecgLoaded);
+		filepathTextField.setBorder(Border.EMPTY);
+	}
+
+	private void handleFileLoadingException(JAXBException e) {
+		e.printStackTrace();
+		filepathTextField.setBorder(new Border(new BorderStroke(Color.RED,
+				BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
 	}
 
 	private void loadEcg(Ecg ecgLoaded) {
@@ -122,7 +134,7 @@ public class ApplicationController {
 	private void saveAndLoad(Ecg ecgGenerated) {
 		loadEcg(ecgGenerated);
 		saveFile(ecgGenerated);
-		filepath.setText(Constants.DEFAULT_SAVE_PATH);
+		filepathTextField.setText(Constants.DEFAULT_SAVE_PATH);
 	}
 
 	private void saveFile(Ecg ecgGenerated) {

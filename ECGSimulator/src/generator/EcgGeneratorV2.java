@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +15,9 @@ import java.util.stream.Stream;
 
 import com.google.common.base.Joiner;
 
-import enums.Complex;
-import enums.RythmType;
+import common.enums.Complex;
+import common.enums.RythmType;
+import common.utils.PathJoiner;
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
 import parser.generated.jaxb.LeadType;
@@ -23,58 +25,69 @@ import resources.Constants;
 
 public class EcgGeneratorV2 {
 
+	private static Random generator = new Random();
+
 	public static Ecg generate(EcgGenerationParameters config) {
-		var result = initializeResult(config);
+		Ecg result = initializeResult(config);
 		RythmType rythmType = config.getRythmType();
 		final List<ComplexFilenamePair> signalDetails = assignGenerationSources(rythmType);
 		for (LeadType leadType : LeadType.values()) {
 			List<List<Integer>> complexesOrdered = loadComplexesSignalsAsPoints(signalDetails, leadType);
 			addNoise(complexesOrdered, config.getNoiseLevel());
-			result.addLead(createLeadPart(complexesOrdered, leadType));
+			result.addLead(generateLeadPartWithSignal(complexesOrdered, leadType));
 		}
 		return result;
 	}
 
 	private static List<ComplexFilenamePair> assignGenerationSources(RythmType rythmType) {
 		final List<ComplexFilenamePair> sourcesFilenames = new ArrayList<>();
-		final Iterator<Complex> complexexOrderIterator = rythmType.getComplexesOrder().iterator();
-		for (int i = 0; i < Constants.ECG_SIGNAL_COMPLEX_NUMBER; i++) {
-			Complex complexNow = complexexOrderIterator.hasNext() ? complexexOrderIterator.next() : Complex.S;
-			String pathToPickFrom = complexNow.getResourceSubPath();
+		final List<Complex> complexesToGenerateSignalFor = randomizeSpecificComplexesOrderPosition(rythmType);
+		for (Complex complexNow : complexesToGenerateSignalFor) {
+			final String pathToPickFrom = PathJoiner.join(Constants.COMPLEXES_PATH, complexNow.getCode());
 			sourcesFilenames.add(new ComplexFilenamePair(complexNow, getRandomFilename(pathToPickFrom)));
 		}
 		return sourcesFilenames;
 	}
 
+	private static List<Complex> randomizeSpecificComplexesOrderPosition(RythmType rythmType) {
+		final List<Complex> result = new ArrayList<>(
+				Collections.nCopies(Constants.ECG_SIGNAL_NUMBER_OF_COMPLEXES, Complex.S));
+		final Iterator<Complex> complexesToInsert = rythmType.getComplexesOrder().iterator();
+		final int specificComplexesOrderStartPosition = generator
+				.nextInt(Constants.ECG_SIGNAL_MAX_COMPLEX_POSITION_FOR_SPECIFIC_DISEASE_COMPLEXES);
+		for (int i = specificComplexesOrderStartPosition; complexesToInsert.hasNext(); i++) {
+			result.set(i, complexesToInsert.next());
+		}
+		return result;
+	}
+
 	private static void addNoise(List<List<Integer>> extractedIntervals, int noiseLevel) {
 		if (noiseLevel > 0) {
-			Random generator = new Random();
 			for (int i = 0; i < extractedIntervals.size(); i++) {
 				List<Integer> unnoisedInterval = extractedIntervals.get(i);
-				List<Integer> noisedList = unnoisedInterval.stream().map(point -> point + generator.nextInt(noiseLevel))
-						.collect(Collectors.toList());
-				extractedIntervals.set(i, noisedList);
+				List<Integer> noisedInterval = unnoisedInterval.stream()
+						.map(point -> point + generator.nextInt(noiseLevel)).collect(Collectors.toList());
+				extractedIntervals.set(i, noisedInterval);
 			}
 		}
 	}
 
 	private static List<List<Integer>> loadComplexesSignalsAsPoints(List<ComplexFilenamePair> signalDetails,
 			LeadType leadType) {
-		final List<List<Integer>> complexesSignals = new ArrayList<>();
+		final List<List<Integer>> complexesIntPoints = new ArrayList<>();
 		for (ComplexFilenamePair complexData : signalDetails) {
-			String pathToRead = String.format("%s%s/%s", complexData.getComplex().getResourceSubPath(),
+			String pathToRead = PathJoiner.join(Constants.COMPLEXES_PATH, complexData.getComplex().getCode(),
 					leadType.ordinal(), complexData.getFilename());
 			InputStream signalPart = EcgGeneratorV2.class.getResourceAsStream(pathToRead);
 			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(signalPart))) {
-				String complexSignalContent = bufferedReader.readLine();
-				final List<Integer> mapToIntPoints = mapToIntPoints(complexSignalContent);
-				complexesSignals.add(mapToIntPoints);
+				final List<Integer> complexIntPoints = mapToIntPoints(bufferedReader.readLine());
+				complexesIntPoints.add(complexIntPoints);
 			} catch (IOException e) {
 				e.printStackTrace();
-				throw new IllegalStateException("Cannot read the file: " + pathToRead);
+				throw new IllegalArgumentException("Cannot read the Complex file: " + pathToRead);
 			}
 		}
-		return complexesSignals;
+		return complexesIntPoints;
 	}
 
 	private static List<Integer> mapToIntPoints(String complexSignalContent) {
@@ -84,11 +97,8 @@ public class EcgGeneratorV2 {
 	}
 
 	private static String getRandomFilename(String resourcePath) {
-		Random generator = new Random();
 		List<String> signalPartsList = getResourceFiles(resourcePath);
-		String randomSignalPartFilename = signalPartsList.get(generator.nextInt(signalPartsList.size()));
-		System.out.println("Selected signal part: " + randomSignalPartFilename);
-		return randomSignalPartFilename;
+		return signalPartsList.get(generator.nextInt(signalPartsList.size()));
 	}
 
 	private static Ecg initializeResult(EcgGenerationParameters config) {
@@ -98,7 +108,7 @@ public class EcgGeneratorV2 {
 		return result;
 	}
 
-	private static Lead createLeadPart(List<List<Integer>> complexesSignals, LeadType leadType) {
+	private static Lead generateLeadPartWithSignal(List<List<Integer>> complexesSignals, LeadType leadType) {
 		Lead lead = new Lead();
 		lead.setLeadType(leadType);
 		String part = generateSignal(complexesSignals);
@@ -131,7 +141,7 @@ public class EcgGeneratorV2 {
 	private static List<String> getResourceFiles(String path) {
 		List<String> filenames = new ArrayList<>();
 
-		try (InputStream in = getResourceAsStream(path + LeadType.I.ordinal());
+		try (InputStream in = getResourceAsStream(PathJoiner.join(path, LeadType.I.ordinal()));
 				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 
 			String resource;

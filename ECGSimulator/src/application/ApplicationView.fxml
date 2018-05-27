@@ -34,7 +34,7 @@
                     </rowConstraints>
                      <children>
                         <Button fx:id="browseButton" mnemonicParsing="false" onAction="#browsePressed" text="Browse" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
-                        <TextField fx:id="filepath" onAction="#loadFile" promptText="type *.ekg filepath and press 'enter' or browse for file..." />
+                        <TextField fx:id="filepathTextField" onAction="#loadFile" promptText="type *.ekg filepath and press 'enter' or browse for file..." />
                         <ComboBox id="leadCombobox" fx:id="leadCombobox" minWidth="100.0" onAction="#visualize" promptText="Select lead" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>

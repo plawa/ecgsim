@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import enums.RythmType;
+import common.enums.RythmType;
 import parser.generated.jaxb.Ecg;
 
 public class EcgGeneratorTest {

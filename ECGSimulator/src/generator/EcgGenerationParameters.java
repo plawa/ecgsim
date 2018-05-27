@@ -1,6 +1,6 @@
 package generator;
 
-import enums.RythmType;
+import common.enums.RythmType;
 import parser.generated.jaxb.LeadType;
 
 public class EcgGenerationParameters {

@@ -1,6 +1,6 @@
 package generator;
 
-import enums.Complex;
+import common.enums.Complex;
 
 class ComplexFilenamePair {
 	private Complex complex;

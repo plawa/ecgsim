@@ -1,16 +1,16 @@
 package generator;
 
-import common.enums.RythmType;
+import common.enums.DiseaseType;
 import parser.generated.jaxb.LeadType;
 
 public class EcgGenerationParameters {
 
-	private RythmType rythmType;
+	private DiseaseType rythmType;
 	private int heartRate;
 	private int noiseLevel;
 	private LeadType lead;
 
-	public EcgGenerationParameters(RythmType rythmType, int heartRate, LeadType lead) {
+	public EcgGenerationParameters(DiseaseType rythmType, int heartRate, LeadType lead) {
 		this.rythmType = rythmType;
 		this.heartRate = heartRate;
 	}
@@ -18,11 +18,11 @@ public class EcgGenerationParameters {
 	public EcgGenerationParameters() {
 	}
 
-	public RythmType getRythmType() {
+	public DiseaseType getRythmType() {
 		return rythmType;
 	}
 
-	public void setRythmType(RythmType rythmType) {
+	public void setRythmType(DiseaseType rythmType) {
 		this.rythmType = rythmType;
 	}
 
@@ -56,7 +56,7 @@ public class EcgGenerationParameters {
 		this.noiseLevel = noiseLevel;
 	}
 
-	public EcgGenerationParameters withRythmType(RythmType rythmType) {
+	public EcgGenerationParameters withRythmType(DiseaseType rythmType) {
 		this.rythmType = rythmType;
 		return this;
 	}

@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import com.google.common.base.Joiner;
 
 import common.enums.Complex;
-import common.enums.RythmType;
+import common.enums.DiseaseType;
 import common.utils.PathJoiner;
 import parser.generated.jaxb.Ecg;
 import parser.generated.jaxb.Ecg.Lead;
@@ -29,7 +29,7 @@ public class EcgGeneratorV2 {
 
 	public static Ecg generate(EcgGenerationParameters config) {
 		Ecg result = initializeResult(config);
-		RythmType rythmType = config.getRythmType();
+		DiseaseType rythmType = config.getRythmType();
 		final List<ComplexFilenamePair> signalDetails = assignGenerationSources(rythmType);
 		for (LeadType leadType : LeadType.values()) {
 			List<List<Integer>> complexesOrdered = loadComplexesSignalsAsPoints(signalDetails, leadType);
@@ -39,7 +39,7 @@ public class EcgGeneratorV2 {
 		return result;
 	}
 
-	private static List<ComplexFilenamePair> assignGenerationSources(RythmType rythmType) {
+	private static List<ComplexFilenamePair> assignGenerationSources(DiseaseType rythmType) {
 		final List<ComplexFilenamePair> sourcesFilenames = new ArrayList<>();
 		final List<Complex> complexesToGenerateSignalFor = randomizeSpecificComplexesOrderPosition(rythmType);
 		for (Complex complexNow : complexesToGenerateSignalFor) {
@@ -49,10 +49,10 @@ public class EcgGeneratorV2 {
 		return sourcesFilenames;
 	}
 
-	private static List<Complex> randomizeSpecificComplexesOrderPosition(RythmType rythmType) {
+	private static List<Complex> randomizeSpecificComplexesOrderPosition(DiseaseType rythmType) {
 		final List<Complex> result = new ArrayList<>(
 				Collections.nCopies(Constants.ECG_SIGNAL_NUMBER_OF_COMPLEXES, Complex.S));
-		final Iterator<Complex> complexesToInsert = rythmType.getComplexesOrder().iterator();
+		final Iterator<Complex> complexesToInsert = Stream.of(rythmType.getComplexesOrder()).iterator();
 		final int specificComplexesOrderStartPosition = generator
 				.nextInt(Constants.ECG_SIGNAL_MAX_COMPLEX_POSITION_FOR_SPECIFIC_DISEASE_COMPLEXES);
 		for (int i = specificComplexesOrderStartPosition; complexesToInsert.hasNext(); i++) {
@@ -78,11 +78,11 @@ public class EcgGeneratorV2 {
 		for (ComplexFilenamePair complexData : signalDetails) {
 			String pathToRead = PathJoiner.join(Constants.COMPLEXES_PATH, complexData.getComplex().getCode(),
 					leadType.ordinal(), complexData.getFilename());
-			InputStream signalPart = EcgGeneratorV2.class.getResourceAsStream(pathToRead);
+			InputStream signalPart = EcgGeneratorV2.class.getResourceAsStream(PathJoiner.slashBegin(pathToRead));
 			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(signalPart))) {
 				final List<Integer> complexIntPoints = mapToIntPoints(bufferedReader.readLine());
 				complexesIntPoints.add(complexIntPoints);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				throw new IllegalArgumentException("Cannot read the Complex file: " + pathToRead);
 			}
@@ -141,7 +141,8 @@ public class EcgGeneratorV2 {
 	private static List<String> getResourceFiles(String path) {
 		List<String> filenames = new ArrayList<>();
 
-		try (InputStream in = getResourceAsStream(PathJoiner.join(path, LeadType.I.ordinal()));
+		final String pathToReadFrom = PathJoiner.join(path, LeadType.I.ordinal());
+		try (InputStream in = getResourceAsStream(pathToReadFrom);
 				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 
 			String resource;

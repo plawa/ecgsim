@@ -14,4 +14,8 @@ public class PathJoiner {
 		final Path path = Paths.get(path1, restStrings);
 		return path.toString().replaceAll(SLASH_WINDOWS_STYLE_ESCAPED, SLASH_UNIX_STYLE);
 	}
+
+	public static String slashBegin(String path) {
+		return SLASH_UNIX_STYLE + path;
+	}
 }

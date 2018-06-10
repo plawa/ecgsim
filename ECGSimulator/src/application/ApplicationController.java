@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import common.enums.RythmType;
+import common.enums.DiseaseType;
+import common.utils.PathJoiner;
 import generator.EcgGenerationParameters;
 import generator.EcgGeneratorV2;
 import javafx.beans.property.ObjectProperty;
@@ -20,6 +21,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
@@ -28,6 +30,7 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import parser.generated.jaxb.Ecg;
@@ -42,10 +45,13 @@ public class ApplicationController {
 	private TextField filepathTextField;
 
 	@FXML
-	private Button browseButton, generateButton;
+	private Button loadBowseButton, saveBrowseButton, generateButton;
 
 	@FXML
-	private ComboBox<RythmType> diseaseCombobox;
+	private Label saveDirectoryLabel;
+
+	@FXML
+	private ComboBox<DiseaseType> diseaseCombobox;
 
 	@FXML
 	private ComboBox<LeadType> leadCombobox;
@@ -59,30 +65,47 @@ public class ApplicationController {
 	@FXML
 	private NumberAxis xAxis, yAxis;
 
-	private ObjectProperty<RythmType> diseaseProperty = new SimpleObjectProperty<>();
+	private ObjectProperty<DiseaseType> diseaseProperty = new SimpleObjectProperty<>();
+
+	private ObjectProperty<Ecg> currentEcgSignal = new SimpleObjectProperty<>();
 
 	private final FileChooser fileChooser = new FileChooser();
 
-	private Ecg currentEcgSignal;
+	private final DirectoryChooser directoryChooser = new DirectoryChooser();
 
 	private Stage primaryStage;
 
 	@FXML
 	private void initialize() {
-		diseaseCombobox.getItems().setAll(RythmType.values());
-		diseaseCombobox.valueProperty().bindBidirectional(diseaseProperty);
-		generateButton.disableProperty().bind(diseaseProperty.isNull());
-		filepathTextField.focusedProperty().addListener(new FilepathTextFieldFocusLostChangeListener());
+		diseaseCombobox.getItems().setAll(DiseaseType.values());
+		directoryChooser.setInitialDirectory(Constants.DEFAULT_SAVE_DIR);
+		bindProperties();
 		filepathTextField.setText("A:\\Studia\\Praca magisterska\\Disc\\CSE_diagnostics\\D_00011.ekg");
 		ChartSupport.setupZooming(chart);
 	}
 
+	private void bindProperties() {
+		diseaseCombobox.valueProperty().bindBidirectional(diseaseProperty);
+		generateButton.disableProperty().bind(diseaseProperty.isNull());
+		leadCombobox.disableProperty().bind(currentEcgSignal.isNull());
+		saveDirectoryLabel.textProperty().bind(directoryChooser.initialDirectoryProperty().asString());
+		filepathTextField.focusedProperty().addListener(new FilepathTextFieldFocusLostChangeListener());
+	}
+
 	@FXML
-	private void browsePressed() throws JAXBException {
+	private void loadBrowsePressed() throws JAXBException {
 		File fileChoosen = fileChooser.showOpenDialog(primaryStage);
 		if (fileChoosen != null) {
 			filepathTextField.setText(fileChoosen.getAbsolutePath());
 			loadFile();
+		}
+	}
+
+	@FXML
+	private void saveBrowsePressed() throws JAXBException {
+		File dirChoosen = directoryChooser.showDialog(primaryStage);
+		if (dirChoosen != null) {
+			directoryChooser.setInitialDirectory(dirChoosen);
 		}
 	}
 
@@ -108,7 +131,7 @@ public class ApplicationController {
 	}
 
 	private void loadEcg(Ecg ecgLoaded) {
-		currentEcgSignal = ecgLoaded;
+		currentEcgSignal.set(ecgLoaded);
 		populateLeadCombobox();
 		defaultLead();
 	}
@@ -120,7 +143,7 @@ public class ApplicationController {
 
 	@FXML
 	private void visualize() throws JAXBException {
-		loadChart(currentEcgSignal);
+		loadChart(currentEcgSignal.get());
 		ChartSupport.resetChartZoom(chart);
 	}
 
@@ -133,20 +156,22 @@ public class ApplicationController {
 
 	private void saveAndLoad(Ecg ecgGenerated) {
 		loadEcg(ecgGenerated);
-		saveFile(ecgGenerated);
-		filepathTextField.setText(Constants.DEFAULT_SAVE_PATH);
+		String savePath = PathJoiner.join(directoryChooser.getInitialDirectory().getAbsolutePath(),
+				Constants.DEFAULT_SAVE_FILENAME);
+		saveFile(ecgGenerated, savePath);
+		filepathTextField.setText(savePath);
 	}
 
-	private void saveFile(Ecg ecgGenerated) {
+	private void saveFile(Ecg ecgGenerated, String savePath) {
 		try {
-			EcgMarshaller.marshall(ecgGenerated, Constants.DEFAULT_SAVE_PATH);
+			EcgMarshaller.marshall(ecgGenerated, savePath);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private EcgGenerationParameters retrieveGenerationParameters() {
-		RythmType rythmType = diseaseProperty.get();
+		DiseaseType rythmType = diseaseProperty.get();
 		int heartRate = 60;
 		EcgGenerationParameters config = new EcgGenerationParameters(rythmType, heartRate, LeadType.I);
 		config.setNoiseLevel((int) noiseLevelSlider.getValue());
@@ -168,7 +193,7 @@ public class ApplicationController {
 	}
 
 	private void populateLeadCombobox() {
-		List<LeadType> leadNames = currentEcgSignal.getLead().stream().map(Lead::getLeadType)
+		List<LeadType> leadNames = currentEcgSignal.get().getLead().stream().map(Lead::getLeadType)
 				.collect(Collectors.toList());
 		leadCombobox.setItems(FXCollections.observableArrayList(leadNames));
 	}

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import common.enums.RythmType;
+import common.enums.DiseaseType;
 import parser.generated.jaxb.Ecg;
 
 public class EcgGeneratorTest {
@@ -19,7 +19,7 @@ public class EcgGeneratorTest {
 	public void testGenerateSinusRythm() {
 		EcgGenerationParameters sinusRythmConfig = new EcgGenerationParameters()
 				.withHeartRate(70)
-				.withRythmType(RythmType.SINUS_RYTHM);
+				.withRythmType(DiseaseType.SINUS_RYTHM);
 		Ecg generatedEcg = EcgGenerator.generate(sinusRythmConfig);
 		assertCommonProperties(generatedEcg);
 	}

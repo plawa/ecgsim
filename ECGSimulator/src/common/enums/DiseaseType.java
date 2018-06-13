@@ -16,7 +16,10 @@ public enum DiseaseType {
 			new Complex[] { Complex.S, Complex.V, Complex.S, Complex.V, Complex.S }),
 	TRIGEMINIA_CHAMBER(
 			"Trigeminia Chamber",
-			new Complex[] { Complex.S, Complex.S, Complex.V, Complex.S, Complex.S, Complex.V, Complex.S, Complex.S });
+			new Complex[] { Complex.S, Complex.S, Complex.V, Complex.S, Complex.S, Complex.V, Complex.S, Complex.S }),
+	VENTRICULAR_BEATS(
+			"Ventricular Beats",
+			new Complex[] { Complex.S, Complex.V, Complex.V, Complex.S });
 
 	String name;
 	Complex[] complexes;

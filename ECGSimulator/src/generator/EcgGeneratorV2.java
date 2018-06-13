@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 import common.enums.Complex;
 import common.enums.DiseaseType;
@@ -44,7 +45,9 @@ public class EcgGeneratorV2 {
 		final List<Complex> complexesToGenerateSignalFor = randomizeSpecificComplexesOrderPosition(rythmType);
 		for (Complex complexNow : complexesToGenerateSignalFor) {
 			final String pathToPickFrom = PathJoiner.join(Constants.COMPLEXES_PATH, complexNow.getCode());
-			sourcesFilenames.add(new ComplexFilenamePair(complexNow, getRandomFilename(pathToPickFrom)));
+			final String randomFilename = getRandomFilename(pathToPickFrom);
+			sourcesFilenames.add(new ComplexFilenamePair(complexNow, randomFilename));
+			System.out.println(randomFilename);
 		}
 		return sourcesFilenames;
 	}
@@ -119,23 +122,55 @@ public class EcgGeneratorV2 {
 	private static String generateSignal(List<List<Integer>> complexSignals) {
 		LinkedList<Integer> signal = new LinkedList<>();
 		final Iterator<List<Integer>> complexSignalsIterator = complexSignals.iterator();
+		List<Integer> previousInterval = null;
 		while (signal.size() < Constants.ECG_SIGNAL_LENGTH) {
-			addNormalizedSignalValue(signal, complexSignalsIterator.next());
+			List<Integer> intervalToAdd = complexSignalsIterator.next();
+			previousInterval = addNormalizedSignalValue(signal, previousInterval, intervalToAdd);
 		}
 		List<Integer> signalTrimmed = signal.subList(0, Constants.ECG_SIGNAL_LENGTH);
 		return Joiner.on(Constants.CHARACTER_SPACE).join(signalTrimmed);
 	}
 
-	private static void addNormalizedSignalValue(LinkedList<Integer> signal, List<Integer> nextInterval) {
-		List<Integer> intervalToAdd = nextInterval;
-		if (!signal.isEmpty()) {
-			Integer lastPoint = signal.getLast();
-			Integer firstPointOfNewSignal = nextInterval.iterator().next();
-			Integer diff = lastPoint - firstPointOfNewSignal;
-			intervalToAdd = nextInterval.stream().mapToInt(Integer::intValue).map(p -> p + diff).boxed()
-					.collect(Collectors.toList());
-		}
+	private static List<Integer> addNormalizedSignalValue(LinkedList<Integer> signal, List<Integer> previousInterval,
+			List<Integer> nextInterval) {
+		List<Integer> intervalToAdd = normalizeInterval(previousInterval, nextInterval);
 		signal.addAll(intervalToAdd);
+		return intervalToAdd;
+	}
+
+	private static List<Integer> normalizeInterval(List<Integer> previousInterval, List<Integer> nextInterval) {
+		List<Integer> intervalToAdd = nextInterval;
+		if (previousInterval != null) {
+			// intervalToAdd = levelInterval(previousInterval, intervalToAdd);
+			List<Integer> intervalToAddLeveled = levelInterval(previousInterval, intervalToAdd);
+			intervalToAdd = fitInterval(previousInterval, intervalToAddLeveled);
+		}
+		return intervalToAdd;
+	}
+
+	private static List<Integer> levelInterval(List<Integer> previousInterval, final List<Integer> nextInterval) {
+		final Integer offset = calculateOffset(previousInterval, nextInterval);
+		return nextInterval.stream().mapToInt(Integer::intValue).map(p -> p + offset).boxed()
+				.collect(Collectors.toList());
+	}
+
+	private static Integer calculateOffset(List<Integer> previousInterval, List<Integer> nextInterval) {
+		final Integer firstPointOfNewInterval = Iterables.getFirst(nextInterval, null);
+		final Integer lastPoint = Iterables.getLast(previousInterval);
+		return lastPoint - firstPointOfNewInterval;
+	}
+
+	private static List<Integer> fitInterval(List<Integer> previousInterval, List<Integer> nextInterval) {
+		final Float fittingRatio = calculateFittingRatio(previousInterval, nextInterval);
+		final Integer firstPoint = nextInterval.iterator().next();
+		return nextInterval.stream().mapToInt(Integer::intValue).map(p -> p - firstPoint)
+				.map(p -> Math.round(p * fittingRatio)).map(p -> p + firstPoint).boxed().collect(Collectors.toList());
+	}
+
+	private static Float calculateFittingRatio(List<Integer> previousInterval, List<Integer> nextInterval) {
+		final Integer previousMaxPoint = Collections.max(previousInterval) - previousInterval.iterator().next();
+		final Integer currentMaxPoint = Collections.max(nextInterval) - nextInterval.iterator().next();
+		return Math.abs((float) previousMaxPoint / currentMaxPoint);
 	}
 
 	private static List<String> getResourceFiles(String path) {

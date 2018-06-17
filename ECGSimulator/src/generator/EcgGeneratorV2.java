@@ -141,23 +141,37 @@ public class EcgGeneratorV2 {
 	private static List<Integer> normalizeInterval(List<Integer> previousInterval, List<Integer> nextInterval) {
 		List<Integer> intervalToAdd = nextInterval;
 		if (previousInterval != null) {
-			// intervalToAdd = levelInterval(previousInterval, intervalToAdd);
 			List<Integer> intervalToAddLeveled = levelInterval(previousInterval, intervalToAdd);
 			intervalToAdd = fitInterval(previousInterval, intervalToAddLeveled);
+		} else {
+			intervalToAdd = levelInterval(Constants.ECG_SIGNAL_START_POINT_Y, intervalToAdd);
 		}
 		return intervalToAdd;
 	}
 
+	private static List<Integer> levelInterval(Integer startPoint, final List<Integer> nextInterval) {
+		final Integer offset = calculateOffsetForStartPoint(nextInterval, startPoint);
+		return moveInterval(nextInterval, offset);
+	}
+
 	private static List<Integer> levelInterval(List<Integer> previousInterval, final List<Integer> nextInterval) {
 		final Integer offset = calculateOffset(previousInterval, nextInterval);
+		return moveInterval(nextInterval, offset);
+	}
+
+	private static List<Integer> moveInterval(final List<Integer> nextInterval, final Integer offset) {
 		return nextInterval.stream().mapToInt(Integer::intValue).map(p -> p + offset).boxed()
 				.collect(Collectors.toList());
 	}
 
 	private static Integer calculateOffset(List<Integer> previousInterval, List<Integer> nextInterval) {
-		final Integer firstPointOfNewInterval = Iterables.getFirst(nextInterval, null);
 		final Integer lastPoint = Iterables.getLast(previousInterval);
-		return lastPoint - firstPointOfNewInterval;
+		return calculateOffsetForStartPoint(nextInterval, lastPoint);
+	}
+
+	private static Integer calculateOffsetForStartPoint(List<Integer> interval, final Integer startPoint) {
+		final Integer firstPointOfNewInterval = Iterables.getFirst(interval, null);
+		return startPoint - firstPointOfNewInterval;
 	}
 
 	private static List<Integer> fitInterval(List<Integer> previousInterval, List<Integer> nextInterval) {
